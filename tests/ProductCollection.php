@@ -64,4 +64,20 @@ $products->offset(2);
 if(assert($products->getProducts() == [new Product(['sku' => 'baz'])], 'Returns collection which has been initialized')) {
     echo '.';
 }
+
+$products = new ProductCollection([new Product(['sku' => 'fuu']), new Product(['sku' => 'bar']), new Product(['sku' => 'baz'])]);
+$products->offset(1);
+if(assert($products->getSize(1) == 2, 'Returns collection which has been initialized')) {
+    echo '.';
+}
+
+$products = new ProductCollection([new Product(['sku' => 'fuu'])]);
+$products->offset(1);
+if(assert($products->getSize(1) == 2, 'Returns collection which has been initialized')) {
+    echo '.';
+}
+
+
 echo "\n";
+
+
