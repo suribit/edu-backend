@@ -1,37 +1,33 @@
 <?php
 
-class Product
-{
-    private $_data = array();
+require_once __DIR__ . '/ElementCollection.php';
 
-    public function __construct(array $data)
-    {
-        $this->_data = $data;
-    }
+class Product extends ElementCollection
+{
 
     public function getSku()
     {
-        return $this->_getData('sku');
+        return $this->getValue('sku');
     }
 
     public function getName()
     {
-        return $this->_getData('name');
+        return $this->getValue('name');
     }
 
     public function getImage()
     {
-        return $this->_getData('image');
+        return $this->getValue('image');
     }
 
     public function getPrice()
     {
-        return $this->_getData('price');
+        return $this->getValue('price');
     }
 
     public function getSpecialPrice()
     {
-        return $this->_getData('special_price');
+        return $this->getValue('special_price');
     }
 
     public function isSpecialPriceApplied()
@@ -39,8 +35,4 @@ class Product
         return (bool) $this->getSpecialPrice();
     }
 
-    private function _getData($key)
-    {
-        return isset($this->_data[$key]) ? $this->_data[$key] : null;
-    }
 }
