@@ -1,0 +1,16 @@
+<?php
+/**
+ * @project  edu-backend
+ * @author   Seregei Waribrus <wss.world@gmail.com>
+ * @date     11/10/13
+ */
+require_once __DIR__ . '/EntityCollection.php';
+require_once __DIR__ . '/Entity.php';
+
+class ProductCollection extends EntityCollection
+{
+    public function getProducts()
+    {
+        return $this->_getEntities();
+    }
+}

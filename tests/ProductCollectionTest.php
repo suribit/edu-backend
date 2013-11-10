@@ -6,8 +6,8 @@
  * Time: 10:02 PM
  */
 
-require_once __DIR__ . '/../src/Product.php';
-require_once __DIR__ . '/../src/ProductCollection.php';
+require_once __DIR__ . '/../src/models/Product.php';
+require_once __DIR__ . '/../src/models/ProductCollection.php';
 
 class ProductCollectionTest extends PHPUnit_Framework_TestCase
 {
@@ -80,9 +80,49 @@ class ProductCollectionTest extends PHPUnit_Framework_TestCase
 
     public function testAppliesOffsetForProductCollectionSize()
     {
-        $collection = new ProductCollection([new Product(['sku' => 1]), new Product(['sku' => 2]), new Product(['sku' => 3])]);
+        $collection = new ProductCollection(
+            [new Product(['sku' => 1]), new Product(['sku' => 2]), new Product(['sku' => 3])]
+        );
         $collection->offset(1);
 
         $this->assertEquals(2, $collection->getSize());
+    }
+
+    public function testIsIterableWithForeachFunction()
+    {
+        $collection = new ProductCollection(
+            [new Product(['sku' => 'foo']), new Product(['sku' => 'bar'])]
+        );
+        $expected = array(0 => 'foo', 1 => 'bar');
+        $iterated = false;
+        foreach ($collection as $_key => $_product) {
+            $this->assertEquals($expected[$_key], $_product->getSku());
+            $iterated = true;
+        }
+
+        if (!$iterated) {
+            $this->fail('Iteration did not happen');
+        }
+    }
+
+    public function testSortsProductsByField()
+    {
+        $collection = new ProductCollection(
+            [
+                new Product(['sku' => 'C']),
+                new Product(['sku' => 'A']),
+                new Product(['sku' => 'B'])
+            ]
+        );
+
+        $collection->sort('sku');
+        $this->assertEquals(
+            [
+                new Product(['sku' => 'A']),
+                new Product(['sku' => 'B']),
+                new Product(['sku' => 'C'])
+            ],
+            $collection->getProducts()
+        );
     }
 }
