@@ -1,55 +1,19 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>adfdf</title>
-    <link rel="stylesheet" href="http://necolas.github.io/normalize.css/2.1.3/normalize.css" class="style">
-    <link rel="stylesheet" href="css/style.css" class="style">
-    <link rel="stylesheet" href="css/style_index.css" class="tyle">
-</head>
-<body>
-<div class="wrapper">
-        <header class="head-top">
-            <h1 class="title-page">Новости</h1>
-            <nav class="m-top">
-                <ul>
-                    <li><a href="#">скандалы</a></li>
-                    <li><a href="#">интриги</a></li>
-                    <li><a href="#">расследования</a></li>
-                </ul>
-            </nav>
-        </header>
-        <article class="content">
-            <ul class="product">
+        <article>
+            <ul class="">
                 <?php foreach ($products as $_product): ?>
-                    <li>
-                        <div class="clearfix">
-                            <div class="block-img">
-                                <img src="<?php echo $_product->getImage(); ?>" />
-                            </div>
-                            <h2><?php echo $_product->getName(); ?></h2>
-                            <!--                <span>--><?php //echo $_product->getSku(); ?><!--</span>-->
-                            <div class="right-block">
-                                <span><?php echo $_product->getPrice(); ?></span>
-                                <span><?php echo $_product->getSpecialPrice(); ?></span>
-                            </div>
+                    <li class="clearfix">
+                        <div class="block-img">
+                            <img src="<?php echo $_product->getImage(); ?>" />
                         </div>
+                        <!--                <span>--><?php //echo $_product->getSku(); ?><!--</span>-->
+                        <div class="right-block">
+                            <h2>Наименование товара: <?php echo $_product->getName(); ?></h2>
+                            <span class="price">Цена: <?php echo $_product->getPrice(); ?></span>
+                            <span class="spec-price">Сециальная цена: <?php echo $_product->getSpecialPrice(); ?></span>
+                            <a href="#" class="bay">Купить</a>
+                        </div>
+
                     </li>
                 <?php endforeach; ?>
             </ul>
-            <div class="news cf">
-                <img src="images/news_1.jpg" alt="">
-                <div class="news-text">
-                    <h3><a href="news.html" class="title-news">Страны Евросоюза могут ввести санкции против Google</a></h3>
-                    <p class="content-news">Европейские власти обеспокоены политикой конфиденциальности компании Google. Google хранит личные данные пользователей в одном профиле, в котором может объединяться информация с нескольких десятков разных сайтов.
-                    </p>
-                </div>
-                <div class="theme-news red">Скандал</div>
-            </div>
         </article>
-        <footer class="foot-bot">
-            <p>© «market»</p>
-        </footer>
-    </div>
-</body>
-</html>

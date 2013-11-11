@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Student Webstore</title>
-</head>
-<body>
-    <h1>Product <?php $product->getName(); ?></h1>
-
-    <img src="<?php echo $product->getImage(); ?>" />
-    <h2><?php echo $product->getName(); ?></h2>
-    <span><?php echo $product->getSku(); ?></span>
-    <span><?php echo $product->getPrice(); ?></span>
-    <span><?php echo $product->getSpecialPrice(); ?></span>
-</body>
-</html>
+<article>
+    <div class="clearfix">
+        <div class="block-img">
+            <img src="<?php echo $product->getImage(); ?>" />
+        </div>
+        <!--                <span>--><?php //echo $_product->getSku(); ?><!--</span>-->
+        <div class="right-block">
+            <h2>Наименование товара: <?php echo $product->getName(); ?></h2>
+            <span class="price">Цена: <?php echo $product->getPrice(); ?></span>
+            <span class="spec-price">Сециальная цена: <?php echo $product->getSpecialPrice(); ?></span>
+            <a href="#" class="bay">Купить</a>
+        </div>
+    </div>
+</article>
