@@ -2,19 +2,32 @@
 ini_set('display_errors', 0);
 
 require_once __DIR__ . '/../src/models/Router.php';
+require_once __DIR__ . '/../src/models/PageNotFoundException.php';
 
-$router = new Router($_GET['page']);
+try
+{
+    try
+    {
+        $router = new Router($_GET['page']);
+    }
+    catch (PageNotFoundException $ex)
+    {
+        $router = new Router('notFound_show');
+    }
+    finally
+    {
+        $controllerName = $router->getController();
+        require_once __DIR__ . "/../src/controllers/{$controllerName}.php";
+
+        $controller = new $controllerName;
+        $actionName = $router->getAction();
+
+        $controller->$actionName();
+    }
+}
+catch (Exception $ex)
+{
+    echo 'Error';
+}
 
 
-$controllerName = $router->getController();
-require_once __DIR__ . "/../src/controllers/{$controllerName}.php";
-
-$controller = new $controllerName;
-$actionName = $router->getAction();
-
-// ?page = product_list
-// $controller = new ProductController;
-// $actionName = listAction
-//
-// $controller->listAction()
-$controller->$actionName();
