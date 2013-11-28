@@ -16,8 +16,26 @@ class DBCollectionTest
 
         $this->assertEquals([
             ['id' => 1, 'data' => 'foo'],
+            ['id' => 2, 'data' => 'bar'],
+            ['id' => 3, 'data' => 'kl']
+        ], $collection->fetch());
+    }
+
+    public function testCollectionFilter()
+    {
+        $collection = new DBCollection($this->getConnection()->getConnection(), 'abstract_collection');
+
+        $collection->filter('id', 2);
+        $this->assertEquals([
             ['id' => 2, 'data' => 'bar']
         ], $collection->fetch());
+    }
+
+    public function testCollectionColumnAverage()
+    {
+        $collection = new DBCollection($this->getConnection()->getConnection(), 'abstract_collection');
+
+        $this->assertEquals(2, $collection->getAverage('id'));
     }
 
     public function getConnection()
