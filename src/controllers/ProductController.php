@@ -14,8 +14,8 @@ class ProductController
     public function listAction()
     {
 
-        $connection = new PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $resource = new DBCollection($connection, 'products');
+//        $connection = new PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
+        $resource = new DBCollection($GLOBALS['db']->getPdo(), 'products');
         $products = new ProductCollection($resource);
 
         require_once __DIR__ . '/../views/header.phtml';
@@ -28,8 +28,8 @@ class ProductController
     {
         $product = new Product([]);
 
-        $connection = new PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $resource = new DBEntity($connection, 'products', 'product_id');
+//        $connection = new PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
+        $resource = new DBEntity($GLOBALS['db']->getPdo(), 'products', 'product_id');
         $product->load($resource, $_GET['id']);
 
         require_once __DIR__ . '/../views/header.phtml';

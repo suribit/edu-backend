@@ -3,6 +3,10 @@ ini_set('display_errors', 0);
 
 require_once __DIR__ . '/../src/models/Router.php';
 require_once __DIR__ . '/../src/models/PageNotFoundException.php';
+require_once __DIR__ . '/../src/models/Resource/DBConnect.php';
+
+$GLOBALS['db'] = new DBConnect('localhost', 'shop', 'root', '0000');
+
 
 try
 {
