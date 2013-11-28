@@ -5,35 +5,18 @@
  * @date     11/10/13
  */
 require_once __DIR__ . '/../models/ProductCollection.php';
+require_once __DIR__ . '/../models/Resource/DBCollection.php';
+require_once __DIR__ . '/../models/Resource/DBEntity.php';
 require_once __DIR__ . '/../models/Product.php';
 
 class ProductController
 {
     public function listAction()
     {
-        $products = new ProductCollection([
-            new Product([
-                'image'         => '/images/product.jpg',
-                'name'          => 'Nokla',
-                'sku'           => '1233212312312312',
-                'price'         => 100,
-                'special_price' => 99.99,
-            ]),
-            new Product([
-                'image'         => '/images/product.jpg',
-                'name'          => 'Nokla',
-                'sku'           => '1233212312312312',
-                'price'         => 100,
-                'special_price' => 99.99,
-            ]),
-            new Product([
-                'image'         => '/images/product.jpg',
-                'name'          => 'Nokla',
-                'sku'           => '1233212312312312',
-                'price'         => 100,
-                'special_price' => 99.99,
-            ]),
-        ]);
+
+        $connection = new PDO('mysql:host=localhost;dbname=student', 'root', '0000');
+        $resource = new DBCollection($connection, 'products');
+        $products = new ProductCollection($resource);
 
         require_once __DIR__ . '/../views/header.phtml';
         require_once __DIR__ . '/../views/product_list.phtml';
@@ -43,13 +26,11 @@ class ProductController
 
     public function viewAction()
     {
-        $product = new Product([
-            'image'         => '/images/product.jpg',
-            'name'          => 'Nokla',
-            'sku'           => '1233212312312312',
-            'price'         => 100,
-            'special_price' => 99.99,
-        ]);
+        $product = new Product([]);
+
+        $connection = new PDO('mysql:host=localhost;dbname=student', 'root', '0000');
+        $resource = new DBEntity($connection, 'products', 'product_id');
+        $product->load($resource, $_GET['id']);
 
         require_once __DIR__ . '/../views/header.phtml';
         require_once __DIR__ . '/../views/product_view.phtml';

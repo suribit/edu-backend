@@ -1,9 +1,4 @@
-v sku
-v name
-v image
-v price
-v special price
-v stroked price if special price exists
-
-v list products
-v paging (limit, set offset)
+* use autoloader
+* incapsulate DB connection object
+* incapsulate table name and primary key
+* security

@@ -5,6 +5,7 @@
  * @date     11/10/13
  */
 require_once __DIR__ . '/Entity.php';
+require_once __DIR__ . '/EntityCollection.php';
 
 class Product extends Entity
 {
@@ -36,5 +37,15 @@ class Product extends Entity
     public function isSpecialPriceApplied()
     {
         return (bool) $this->getSpecialPrice();
+    }
+
+    public function getId()
+    {
+        return $this->_getData('product_id');
+    }
+
+    public function load(IResourceEntity $resource, $id)
+    {
+        $this->_data = $resource->find($id);
     }
 }
