@@ -13,6 +13,9 @@ class DBCollection
     private $_connection;
     private $_table;
 
+    private $_filterColumn;
+    private $_filterValue;
+
     public function __construct(PDO $connection, $table)
     {
         $this->_connection = $connection;
@@ -21,7 +24,29 @@ class DBCollection
 
     public function fetch()
     {
-        return $this->_connection->query("SELECT * FROM {$this->_table}")
+        $condition = "";
+        if (isset($this->_filterColumn))
+        {
+            $condition = "WHERE {$this->_filterColumn} = {$this->_filterValue}";
+        }
+
+        return $this->_connection->query("SELECT * FROM {$this->_table} {$condition}")
             ->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function filter($column, $value)
+    {
+        $this->_filterColumn = $column;
+        $this->_filterValue = $value;
+    }
+
+    public function getAverage($column)
+    {
+        $condition = "";
+        if (isset($this->_filterColumn))
+        {
+            $condition = "WHERE {$this->_filterColumn} = {$this->_filterValue}";
+        }
+        return $this->_connection->query("SELECT AVG($column) AS average FROM {$this->_table} {$condition}")->fetch(PDO::FETCH_ASSOC)['average'];
     }
 }
