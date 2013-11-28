@@ -14,7 +14,7 @@ class ProductController
     public function listAction()
     {
 
-        $connection = new PDO('mysql:host=localhost;dbname=student', 'root', '0000');
+        $connection = new PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
         $resource = new DBCollection($connection, 'products');
         $products = new ProductCollection($resource);
 
@@ -28,7 +28,7 @@ class ProductController
     {
         $product = new Product([]);
 
-        $connection = new PDO('mysql:host=localhost;dbname=student', 'root', '0000');
+        $connection = new PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
         $resource = new DBEntity($connection, 'products', 'product_id');
         $product->load($resource, $_GET['id']);
 

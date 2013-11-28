@@ -7,6 +7,7 @@
 
 require_once __DIR__ . '/../src/models/ProductReview.php';
 require_once __DIR__ . '/../src/models/Product.php';
+require_once __DIR__ . '/../src/models/Resource/IResourceEntity.php';
 
 class ProductReviewReviewTest extends PHPUnit_Framework_TestCase
 {
@@ -54,5 +55,19 @@ class ProductReviewReviewTest extends PHPUnit_Framework_TestCase
         $review = new ProductReview(['product' => $productFoo]);
         $this->assertTrue($review->belongsToProduct($productFoo));
         $this->assertFalse($review->belongsToProduct($productBar));
+    }
+
+    public function testLoadDataFromResource()
+    {
+        $resource = $this->getMock('IResourceEntity');
+        $resource->expects($this->any())
+            ->method('find')
+            ->with($this->equalTo(2))
+            ->will($this->returnValue(['name' => 'Blblalb']));
+
+        $review = new ProductReview([]);
+        $review->load($resource, 2);
+
+        $this->assertEquals('Blblalb', $review->getName());
     }
 }

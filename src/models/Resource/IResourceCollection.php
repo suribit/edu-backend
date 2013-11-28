@@ -8,5 +8,7 @@
 interface IResourceCollection
 {
     public function fetch();
+    public function filter($column, $value);
+    public function getAverage($column);
 }
  

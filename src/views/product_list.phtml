@@ -10,7 +10,7 @@
                             <h2>Наименование товара: <?php echo $_product->getName(); ?></h2>
                             <span class="price">Цена: <?php echo $_product->getPrice(); ?></span>
                             <span class="spec-price">Сециальная цена: <?php echo $_product->getSpecialPrice(); ?></span>
-                            <a href="index.php/?page=product_view" class="bay">Купить</a>
+                            <a href="index.php/?page=product_view&id=<?php echo $_product->getId(); ?>" class="bay">Купить</a>
                         </div>
                     </li>
                 <?php endforeach; ?>
