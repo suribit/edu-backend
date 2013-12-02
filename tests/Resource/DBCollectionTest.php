@@ -16,26 +16,43 @@ class DBCollectionTest
 
         $this->assertEquals([
             ['id' => 1, 'data' => 'foo'],
-            ['id' => 2, 'data' => 'bar'],
-            ['id' => 3, 'data' => 'kl']
+            ['id' => 2, 'data' => 'bar']
         ], $collection->fetch());
     }
 
-    public function testCollectionFilter()
+    public function testFetchesFilteredData()
     {
         $collection = new DBCollection($this->getConnection()->getConnection(), 'abstract_collection');
+        $collection->filterBy('id', 1);
+        $this->assertEquals([
+            ['id' => 1, 'data' => 'foo']
+        ], $collection->fetch());
 
-        $collection->filter('id', 2);
+        $collection = new DBCollection($this->getConnection()->getConnection(), 'abstract_collection');
+        $collection->filterBy('data', 'bar');
+        $collection->filterBy('id', 2);
         $this->assertEquals([
             ['id' => 2, 'data' => 'bar']
         ], $collection->fetch());
     }
 
-    public function testCollectionColumnAverage()
+    /**
+     * @dataProvider getColumns
+     */
+    public function testCalculatesAverageAmountByColumn($column, $number)
     {
+        $expected = [
+            1 => (1+2+3)/3,
+            2 => (10+11+12)/3
+        ];
         $collection = new DBCollection($this->getConnection()->getConnection(), 'abstract_collection');
+        $this->assertEquals($expected[$number], $collection->average($column));
 
-        $this->assertEquals(2, $collection->getAverage('id'));
+    }
+
+    public function getColumns()
+    {
+        return [['id', 1],['data', 2]];
     }
 
     public function getConnection()
@@ -47,7 +64,7 @@ class DBCollectionTest
     public function getDataSet()
     {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(
-            __DIR__ . '/DBCollectionTest/fixtures/abstract_collection.yaml'
+            __DIR__ . '/DBCollectionTest/fixtures/' . $this->getName(false) . '.yaml'
         );
     }
 }

@@ -3,5 +3,3 @@ abstract_collection:
     data: foo
   - id: 2
     data: bar
-  - id: 3
-    data: kl

@@ -33,12 +33,12 @@ class ProductReviewCollection
 
     public function getAverageRating()
     {
-        return $this->_resource->getAverage('rating');
+        return $this->_resource->average('rating');
     }
 
     public function filterByProduct(Product $product)
     {
-        $this->_resource->filter('product_id', $product->getId());
+        $this->_resource->filterBy('product_id', $product->getId());
     }
 
     public function getIterator()

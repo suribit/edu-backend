@@ -59,21 +59,21 @@ class ProductTest extends PHPUnit_Framework_TestCase
     }
 
     public function testReturnsIdWhichHasBeenInitialized()
-     {
-         $product = new Product(['product_id' => 1]);
-         $this->assertEquals(1, $product->getId());
+    {
+        $product = new Product(['product_id' => 1]);
+        $this->assertEquals(1, $product->getId());
 
-         $product = new Product(['product_id' => 2]);
-         $this->assertEquals(2, $product->getId());
-     }
+        $product = new Product(['product_id' => 2]);
+        $this->assertEquals(2, $product->getId());
+    }
 
     public function testLoadsDataFromResource()
     {
         $resource = $this->getMock('IResourceEntity');
         $resource->expects($this->any())
-           ->method('find')
-           ->with($this->equalTo(42))
-           ->will($this->returnValue(['name' => 'foo']));
+            ->method('find')
+            ->with($this->equalTo(42))
+            ->will($this->returnValue(['name' => 'foo']));
 
         $product = new Product([]);
         $product->load($resource, 42);

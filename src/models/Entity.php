@@ -23,3 +23,4 @@ class Entity
         return $this->_getData($key);
     }
 }
+
