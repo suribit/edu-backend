@@ -5,6 +5,8 @@
  * @date     11/28/13
  */
 
+namespace App\Model\Resource;
+
 interface IResourceEntity
 {
     public function find($id);

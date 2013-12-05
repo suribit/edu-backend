@@ -1,37 +1,28 @@
 <?php
-ini_set('display_errors', 0);
+namespace App;
 
-require_once __DIR__ . '/../src/models/Router.php';
-require_once __DIR__ . '/../src/models/PageNotFoundException.php';
-require_once __DIR__ . '/../src/models/Resource/DBConnect.php';
-
-$GLOBALS['db'] = new DBConnect('localhost', 'shop', 'root', '0000');
+require_once __DIR__ . '/../autoloader.php';
+ini_set('display_errors', 1);
 
 
-try
-{
-    try
-    {
-        $router = new Router($_GET['page']);
+try {
+    $defaultPath = 'product_list';
+
+    $routePath = isset($_GET['page']) ? $_GET['page'] : $defaultPath ;
+
+    $router = new Model\Router($routePath);
+    $controllerName = $router->getController();
+    $actionName = $router->getAction();
+
+    if (!class_exists($controllerName) || !method_exists($controllerName, $actionName)) {
+        throw new Model\RouterException('Class or method are not exist');
     }
-    catch (PageNotFoundException $ex)
-    {
-        $router = new Router('notFound_show');
-    }
-    finally
-    {
-        $controllerName = $router->getController();
-        require_once __DIR__ . "/../src/controllers/{$controllerName}.php";
 
-        $controller = new $controllerName;
-        $actionName = $router->getAction();
-
-        $controller->$actionName();
-    }
-}
-catch (Exception $ex)
-{
-    echo 'Error';
+} catch (Model\RouterException $e) {
+    $controllerName = '\App\Controller\ErrorController';
+    $actionName = 'notFoundAction';
 }
 
+$controller = new $controllerName;
+$controller->$actionName();
 

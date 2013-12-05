@@ -4,6 +4,7 @@
  * @author   Seregei Waribrus <wss.world@gmail.com>
  * @date     11/10/13
  */
+namespace App\Model;
 class Entity
 {
     protected $_data = array();

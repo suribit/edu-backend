@@ -4,8 +4,7 @@
  * @author   Seregei Waribrus <wss.world@gmail.com>
  * @date     11/10/13
  */
-require_once __DIR__ . '/Entity.php';
-require_once __DIR__ . '/EntityCollection.php';
+namespace App\Model;
 
 class Product extends Entity
 {
@@ -36,7 +35,7 @@ class Product extends Entity
 
     public function isSpecialPriceApplied()
     {
-        return (bool) $this->getSpecialPrice();
+        return $this->getSpecialPrice() > 0;
     }
 
     public function getId()
@@ -44,7 +43,7 @@ class Product extends Entity
         return $this->_getData('product_id');
     }
 
-    public function load(IResourceEntity $resource, $id)
+    public function load(Resource\IResourceEntity $resource, $id)
     {
         $this->_data = $resource->find($id);
     }

@@ -4,19 +4,14 @@
  * @author   Seregei Waribrus <wss.world@gmail.com>
  * @date     11/10/13
  */
-require_once __DIR__ . '/Resource/IResourceCollection.php';
-require_once __DIR__ . '/EntityCollection.php';
-require_once __DIR__ . '/Entity.php';
-require_once __DIR__ . '/Product.php';
-require_once __DIR__ . '/ProductReview.php';
+namespace App\Model;
 
 class ProductReviewCollection
-    implements IteratorAggregate
+    implements \IteratorAggregate
 {
-
     private $_resource;
 
-    public function __construct(IResourceCollection $resource)
+    public function __construct(Resource\IResourceCollection $resource)
     {
         $this->_resource = $resource;
     }
@@ -31,9 +26,9 @@ class ProductReviewCollection
         );
     }
 
-    public function getAverageRating()
+    public function getIterator()
     {
-        return $this->_resource->average('rating');
+        return new \ArrayIterator($this->getReviews());
     }
 
     public function filterByProduct(Product $product)
@@ -41,8 +36,8 @@ class ProductReviewCollection
         $this->_resource->filterBy('product_id', $product->getId());
     }
 
-    public function getIterator()
+    public function getAverageRating()
     {
-        return new ArrayIterator($this->getReviews());
+        return $this->_resource->average('rating');
     }
 }

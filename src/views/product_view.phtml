@@ -1,14 +1,16 @@
-<article>
-    <div class="clearfix">
-        <div class="block-img">
-            <img src="<?php echo $product->getImage(); ?>" />
-        </div>
-        <!--                <span>--><?php //echo $_product->getSku(); ?><!--</span>-->
-        <div class="right-block">
-            <h2>Наименование товара: <?php echo $product->getName(); ?></h2>
-            <span class="price">Цена: <?php echo $product->getPrice(); ?></span>
-            <span class="spec-price">Сециальная цена: <?php echo $product->getSpecialPrice(); ?></span>
-            <a href="#" class="bay">Купить</a>
-        </div>
-    </div>
-</article>
+<a class="page-back" href="/">&larr;</a>
+<h1 class="page-header">
+    <?php echo $product->getName(); ?>
+</h1>
+
+<img class="product-view_image" src="<?php echo $product->getImage(); ?>" />
+<div class="product-view_sku"><?php echo $product->getSku(); ?></div>
+<div>
+    <span
+        class="product-item_price <?php if ($product->isSpecialPriceApplied()): ?>old-price<?php endif; ?>">
+        $<?php echo $product->getPrice(); ?>
+    </span>
+    <?php if($product->isSpecialPriceApplied()): ?>
+        <span class="product-item_price">$<?php echo $product->getSpecialPrice(); ?></span>
+    <?php endif; ?>
+</div>

@@ -5,15 +5,14 @@
  * @date     11/25/13
  */
 
+namespace Test\Model;
+use \App\Model\ProductCollection;
 
-require_once __DIR__ . '/../src/models/Resource/IResourceCollection.php';
-require_once __DIR__ . '/../src/models/ProductCollection.php';
-
-class __ProductCollection extends PHPUnit_Framework_TestCase
+class ProductCollectionTest extends \PHPUnit_Framework_TestCase
 {
     public function testTakesDataFromResource()
     {
-        $resource = $this->getMock('IResourceCollection');
+        $resource = $this->getMock('\App\Model\Resource\IResourceCollection');
         $resource->expects($this->any())
             ->method('fetch')
             ->will($this->returnValue(
@@ -30,7 +29,7 @@ class __ProductCollection extends PHPUnit_Framework_TestCase
 
     public function testIsIterableWithForeachFunction()
     {
-        $resource = $this->getMock('IResourceCollection');
+        $resource = $this->getMock('\App\Model\Resource\IResourceCollection');
         $resource->expects($this->any())
             ->method('fetch')
             ->will($this->returnValue(

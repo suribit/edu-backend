@@ -4,8 +4,7 @@
  * @author   Seregei Waribrus <wss.world@gmail.com>
  * @date     11/10/13
  */
-require_once __DIR__ . '/Product.php';
-require_once __DIR__ . '/Entity.php';
+namespace App\Model;
 
 class ProductReview extends Entity
 {
@@ -34,12 +33,7 @@ class ProductReview extends Entity
         return $product == $this->_getData('product');
     }
 
-    public function getId()
-    {
-        return $this->_getData('review_id');
-    }
-
-    public function load(IResourceEntity $resource, $id)
+    public function load(Resource\IResourceEntity $resource, $id)
     {
         $this->_data = $resource->find($id);
     }

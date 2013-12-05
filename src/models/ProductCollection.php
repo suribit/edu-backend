@@ -4,16 +4,14 @@
  * @author   Seregei Waribrus <wss.world@gmail.com>
  * @date     11/10/13
  */
-require_once __DIR__ . '/Resource/IResourceCollection.php';
-require_once __DIR__ . '/EntityCollection.php';
-require_once __DIR__ . '/Entity.php';
+namespace App\Model;
 
 class ProductCollection
-    implements IteratorAggregate
+    implements \IteratorAggregate
 {
     private $_resource;
 
-    public function __construct(IResourceCollection $resource)
+    public function __construct(Resource\IResourceCollection $resource)
     {
         $this->_resource = $resource;
     }
@@ -30,6 +28,6 @@ class ProductCollection
 
     public function getIterator()
     {
-        return new ArrayIterator($this->getProducts());
+        return new \ArrayIterator($this->getProducts());
     }
 }

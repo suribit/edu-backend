@@ -4,8 +4,9 @@
  * @author   Seregei Waribrus <wss.world@gmail.com>
  * @date     11/19/13
  */
+namespace App\Model;
 
-class PageNotFoundException extends Exception
+class RouterException extends \Exception
 {
 
 }

@@ -1,18 +1,21 @@
-        <article>
-            <ul class="">
-                <?php foreach ($products as $_product): ?>
-                    <li class="clearfix">
-                        <div class="block-img">
-                            <img src="<?php echo $_product->getImage(); ?>" />
-                        </div>
-                        <!--                <span>--><?php //echo $_product->getSku(); ?><!--</span>-->
-                        <div class="right-block">
-                            <h2>Наименование товара: <?php echo $_product->getName(); ?></h2>
-                            <span class="price">Цена: <?php echo $_product->getPrice(); ?></span>
-                            <span class="spec-price">Сециальная цена: <?php echo $_product->getSpecialPrice(); ?></span>
-                            <a href="index.php/?page=product_view&id=<?php echo $_product->getId(); ?>" class="bay">Купить</a>
-                        </div>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </article>
+<h1 class="page-header">Our Product List</h1>
+<ul class="product-list">
+    <?php foreach ($products as $_product): ?>
+        <li class="product-item">
+            <img class="product-item_image" src="<?php echo $_product->getImage(); ?>" />
+            <a href="/?page=product_view&id=<?php echo $_product->getId(); ?>">
+                <h2 class="product-item_title"><?php echo $_product->getName(); ?></h2>
+            </a>
+            <span class="product-item_sku"><?php echo $_product->getSku(); ?></span>
+            <div>
+                <span
+                    class="product-item_price <?php if ($_product->isSpecialPriceApplied()): ?>old-price<?php endif; ?>">
+                    $<?php echo $_product->getPrice(); ?>
+                </span>
+                <?php if ($_product->isSpecialPriceApplied()): ?>
+                    <span class="product-item_price">$<?php echo $_product->getSpecialPrice(); ?></span>
+                <?php endif; ?>
+            </div>
+        </li>
+    <?php endforeach; ?>
+</ul>
