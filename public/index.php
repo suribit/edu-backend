@@ -3,9 +3,11 @@ namespace App;
 
 require_once __DIR__ . '/../autoloader.php';
 ini_set('display_errors', 1);
-
+use \App\Model\Resource;
 
 try {
+    $GLOBALS['PDO'] = (new Model\Resource\DBConnect('localhost', 'shop', 'root', '0000'))->getPdo();
+
     $defaultPath = 'product_list';
 
     $routePath = isset($_GET['page']) ? $_GET['page'] : $defaultPath ;

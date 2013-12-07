@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+<div class="login">
+    <?php if($customer != null && $customer->getName() != null):
+        echo $customer->getName();?>
+        <a href="?page=customer_logout">Logout</a>
+    <?php endif; ?>
+    <?php if($customer == null || $customer->getName() == null): ?>
+        <a href="?page=customer_login">Login</a> |
+        <a href="?page=customer_register">Sign Up</a>
+    <?php endif; ?>
+</div>
 <div class="page-content">
     <?php require_once __DIR__ . "/../{$view}.phtml"; ?>
 </div>
