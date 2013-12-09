@@ -18,14 +18,14 @@ class CustomerController
 
     public function loginAction()
     {
-
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $resource = new DBEntity($connection, new CustomerTable);
+        $resource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
         $customer_helper = new CustomerHelper($resource, (new Session()));
 
         $customer = null;
         if (isset($_POST['customer']) && ($customer = $customer_helper->loginCustomer($_POST['customer']) != null))
         {
+            $session = new Session();
+            
             header('Location: /');
         } else
         {
@@ -43,8 +43,7 @@ class CustomerController
 
     public function registerAction()
     {
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $resource = new DBEntity($connection, new CustomerTable);
+        $resource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
         $customer_helper = new CustomerHelper($resource, (new Session()));
 
         $customer = null;
@@ -58,31 +57,5 @@ class CustomerController
         }
     }
 
-    private function _registerCustomer()
-    {
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $resource = new DBEntity($connection, new CustomerTable);
 
-        $customer = new Customer($_POST['customer']);
-        $customer->save($resource);
-    }
-
-    public function _loginCustomer()
-    {
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $resource = new DBEntity($connection, new CustomerTable);
-
-
-        $customer = new Customer($_POST['customer']);
-        if ($customer->check($resource))
-        {
-            $idCustomer = $customer->getId();
-            $customer->load($resource, $idCustomer);
-            $session = new Session();
-            $session->setData('id', $idCustomer);
-
-            return true;
-        }
-        return false;
-    }
 }

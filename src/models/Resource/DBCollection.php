@@ -30,6 +30,7 @@ class DBCollection
 
     public function filterBy($column, $value)
     {
+
         $this->_filters[$column] = $value;
     }
 

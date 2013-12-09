@@ -1,6 +1,11 @@
-<h1 class="page-header">Our Product List</h1>
+<a class="page-back" href="/">&larr;</a>
+<h1 class="page-header">Products My Cart</h1>
+<?php if (empty($elements)): ?>
+    <h1>Cart empty</h1>
+<?php endif; ?>
 <ul class="product-list">
-    <?php foreach ($products as $_product): ?>
+    <?php foreach ($elements as $e):
+        $_product = $e->getProduct();?>
         <li class="product-item">
             <img class="product-item_image" src="<?php echo $_product->getImage(); ?>" />
             <a href="/?page=product_view&id=<?php echo $_product->getId(); ?>">
@@ -15,8 +20,11 @@
                 <?php if ($_product->isSpecialPriceApplied()): ?>
                     <span class="product-item_price">$<?php echo $_product->getSpecialPrice(); ?></span>
                 <?php endif; ?>
-                <a href="/?page=cart_add&product_id=<?php echo $_product->getId(); ?>" class="option">Add to cart</a>
             </div>
+            <p><?php echo $e->getCount() ?> count</p>
+            <a href="/?page=cart_addCount&cart_element_id=<?php echo $e->getId() ?>">+</a>
+            <a href="/?page=cart_minusCount&cart_element_id=<?php echo $e->getId() ?>">-</a>
+            <a href="/?page=cart_remove&cart_element_id=<?php echo $e->getId() ?>" class="option">Remove from cart</a>
         </li>
     <?php endforeach; ?>
 </ul>
