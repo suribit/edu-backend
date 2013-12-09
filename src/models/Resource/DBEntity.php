@@ -25,6 +25,15 @@ class DBEntity
         return $stmt->fetch(\PDO::FETCH_ASSOC)[$this->_table->getPrimaryKey()];
     }
 
+    public function remove($id)
+    {
+        $smtm = $this->_connection->prepare(
+            "DELETE FROM {$this->_table->getName()} WHERE {$this->_table->getPrimaryKey()} = :id"
+        );
+        $smtm->bindValue(':id', $id);
+        $smtm->execute();
+    }
+
     protected function _prepareSql($data, $columns = '*')
     {
         $fields = array_keys($data);

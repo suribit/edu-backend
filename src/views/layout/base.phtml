@@ -8,6 +8,7 @@
 </head>
 <body>
 <div class="login">
+    <a href="?page=cart_list">My cart</a>
     <?php if($customer != null && $customer->getName() != null):
         echo $customer->getName();?>
         <a href="?page=customer_logout">Logout</a>

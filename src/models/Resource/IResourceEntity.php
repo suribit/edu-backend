@@ -14,4 +14,6 @@ interface IResourceEntity
     public function save($data);
 
     public function check($data);
+
+    public function remove($id);
 }

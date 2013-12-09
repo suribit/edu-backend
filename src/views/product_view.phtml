@@ -14,3 +14,4 @@
         <span class="product-item_price">$<?php echo $product->getSpecialPrice(); ?></span>
     <?php endif; ?>
 </div>
+<a href="/?page=cart_add&product_id=<?php echo $product->getId(); ?>" class="option">Add to cart</a>
