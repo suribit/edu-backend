@@ -6,12 +6,14 @@
  */
 namespace App\Controller;
 
+use App\Model\ProductReviewCollection;
 use App\Model\Resource\DBCollection;
 use App\Model\Resource\DBEntity;
 use App\Model\ProductCollection;
 use App\Model\Product;
 use App\Model\Resource\Paginator as PaginatorAdapter;
 use App\Model\Resource\Table\Product as ProductTable;
+use App\Model\Resource\Table\Review as ReviewTable;
 use Zend\Paginator\Paginator as ZendPaginator;
 use App\Model\Customer;
 use App\Model\Resource\Table\Customer as CustomerTable;
@@ -50,6 +52,17 @@ class ProductController
 
         $resource = new DBEntity($GLOBALS['PDO'], new ProductTable);
         $product->load($resource, $_GET['id']);
+
+        $resourceReview = new DBCollection($GLOBALS['PDO'], new ReviewTable);
+
+        $paginatorAdapter = new PaginatorAdapter($resourceReview);
+        $paginator = new ZendPaginator($paginatorAdapter);
+        $paginator
+            ->setItemCountPerPage(1)
+            ->setCurrentPageNumber(isset($_GET['c']) ? $_GET['c'] : 1);
+        $pagesComment = $paginator->getPages();
+        $reviews = new ProductReviewCollection($resourceReview);
+        
 
         $resource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
         $customer_helper = new CustomerHelper($resource, (new Session()));

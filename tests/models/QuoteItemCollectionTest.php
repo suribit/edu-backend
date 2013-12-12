@@ -40,6 +40,11 @@ class QuoteItemCollectionTest extends \PHPUnit_Framework_TestCase
         $quote = new Quote();
         $quote->loadByCustomer($customer);
 
+
+        $product = new Product([]);
+        $product->load($resource, 42);
+
+
         $collection = new Model\QuoteItemCollection($resource);
         $collection->filterByQuote($quote);
 
