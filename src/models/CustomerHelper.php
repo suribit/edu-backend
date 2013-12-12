@@ -17,6 +17,7 @@ class CustomerHelper {
 
     private $_resource;
     private $_session;
+    private $_customer;
 
     public function __construct(IResourceEntity $resource, IResourceSession $session)
     {
@@ -31,9 +32,10 @@ class CustomerHelper {
         if ($customer->getId() != null)
         {
             $customer->load($this->_resource, $customer->getId());
-            return $customer;
+            $this->_customer = $customer;
+            return true;
         }
-        return null;
+        return false;
     }
 
     public function loginCustomer($data)
@@ -44,20 +46,27 @@ class CustomerHelper {
         {
             $customer->load($this->_resource, $customer->getId());
             $this->_session->setData('idCustomer', $customer->getId());
-            return $customer;
+            $this->_customer = $customer;
+            return true;
         }
-        return null;
+        return false;
     }
 
-    public function checkCustomer()
+    public function isLoggedIn()
     {
         if ($this->_session->getData('idCustomer'))
         {
             $customer = new Customer([]);
             $customer->load($this->_resource, $this->_session->getData('idCustomer'));
-            return $customer;
+            $this->_customer = $customer;
+            return true;
         }
 
-        return null;
+        return false;
+    }
+
+    public function getCustomer()
+    {
+        return $this->_customer;
     }
 } 

@@ -25,7 +25,7 @@ class DBEntity
         return $stmt->fetch(\PDO::FETCH_ASSOC)[$this->_table->getPrimaryKey()];
     }
 
-    public function remove($id)
+    public function delete($id)
     {
         $smtm = $this->_connection->prepare(
             "DELETE FROM {$this->_table->getName()} WHERE {$this->_table->getPrimaryKey()} = :id"
@@ -49,13 +49,22 @@ class DBEntity
         return $stmt;
     }
 
-    public function find($id)
+    public function find($id = null, $data = null)
     {
-        $stmt = $this->_connection->prepare(
-            "SELECT * FROM {$this->_table->getName()} WHERE {$this->_table->getPrimaryKey()} = :id"
-        );
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($id != null)
+        {
+            $stmt = $this->_connection->prepare(
+                "SELECT * FROM {$this->_table->getName()} WHERE {$this->_table->getPrimaryKey()} = :id"
+            );
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+        else
+        {
+            $stmt = $this->_prepareSql($data);
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+
     }
 
     public function save($data)

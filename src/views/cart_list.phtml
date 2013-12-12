@@ -1,11 +1,12 @@
 <a class="page-back" href="/">&larr;</a>
 <h1 class="page-header">Products My Cart</h1>
-<?php if (empty($elements)): ?>
+<?php if (empty($quoteItems)): ?>
     <h1>Cart empty</h1>
 <?php endif; ?>
 <ul class="product-list">
-    <?php foreach ($elements as $e):
-        $_product = $e->getProduct();?>
+    <?php foreach ($quoteItems as $_item):
+        $_product = $_item->getProduct();
+        ?>
         <li class="product-item">
             <img class="product-item_image" src="<?php echo $_product->getImage(); ?>" />
             <a href="/?page=product_view&id=<?php echo $_product->getId(); ?>">
@@ -21,10 +22,21 @@
                     <span class="product-item_price">$<?php echo $_product->getSpecialPrice(); ?></span>
                 <?php endif; ?>
             </div>
-            <p><?php echo $e->getCount() ?> count</p>
-            <a href="/?page=cart_addCount&cart_element_id=<?php echo $e->getId() ?>">+</a>
-            <a href="/?page=cart_minusCount&cart_element_id=<?php echo $e->getId() ?>">-</a>
-            <a href="/?page=cart_remove&cart_element_id=<?php echo $e->getId() ?>" class="option">Remove from cart</a>
+            <p><?php echo $_item->getQty() ?> qty</p>
+            <form action="/?page=cart_update" method="post">
+                <p><input type="hidden" id="product_id" name="product_id" value="<?php echo $_item->getProductId() ?>"></p>
+                <p><input type="hidden" id="qty" name="qty" value="1"></p>
+                <p><input type="submit" value="+"></p>
+            </form>
+            <form action="/?page=cart_update" method="post">
+                <p><input type="hidden" id="product_id" name="product_id" value="<?php echo $_item->getProductId() ?>"></p>
+                <p><input type="hidden" id="qty" name="qty" value="-1"></p>
+                <p><input type="submit" value="-"></p>
+            </form>
+            <form action="/?page=cart_remove" method="post">
+                <p><input type="hidden" id="product_id" name="product_id" value="<?php echo $_item->getProductId() ?>"></p>
+                <p><input type="submit" value="Remove from cart"></p>
+            </form>
         </li>
     <?php endforeach; ?>
 </ul>

@@ -10,7 +10,9 @@ use App\Model\Resource\DBCollection;
 use App\Model\Resource\DBEntity;
 use App\Model\ProductCollection;
 use App\Model\Product;
+use App\Model\Resource\Paginator as PaginatorAdapter;
 use App\Model\Resource\Table\Product as ProductTable;
+use Zend\Paginator\Paginator as ZendPaginator;
 use App\Model\Customer;
 use App\Model\Resource\Table\Customer as CustomerTable;
 use App\Model\Resource\Session;
@@ -22,14 +24,22 @@ class ProductController
 {
     public function listAction()
     {
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $resource = new DBCollection($connection, new ProductTable);
-        $products = new ProductCollection($resource);
+        $resource = new DBCollection($GLOBALS['PDO'], new ProductTable);
+//        $products = new ProductCollection($resource);
 
-        $resource = new DBEntity($connection, new CustomerTable);
+        $paginatorAdapter = new PaginatorAdapter($resource);
+        $paginator = new ZendPaginator($paginatorAdapter);
+        $paginator
+            ->setItemCountPerPage(2)
+            ->setCurrentPageNumber(isset($_GET['p']) ? $_GET['p'] : 1);
+         $pages = $paginator->getPages();
+         $products = new ProductCollection($resource);
+
+        $resource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
         $customer_helper = new CustomerHelper($resource, (new Session()));
 
-        $customer = $customer_helper->checkCustomer();
+        $customer_helper->isLoggedIn();
+        $customer = $customer_helper->getCustomer();
         $view = 'product_list';
         require_once __DIR__ . '/../views/layout/base.phtml';
     }
@@ -38,14 +48,14 @@ class ProductController
     {
         $product = new Product([]);
 
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $resource = new DBEntity($connection, new ProductTable);
+        $resource = new DBEntity($GLOBALS['PDO'], new ProductTable);
         $product->load($resource, $_GET['id']);
 
-        $resource = new DBEntity($connection, new CustomerTable);
+        $resource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
         $customer_helper = new CustomerHelper($resource, (new Session()));
 
-        $customer = $customer_helper->checkCustomer();
+        $customer_helper->isLoggedIn();
+        $customer = $customer_helper->getCustomer();
         $view = 'product_view';
         require_once __DIR__ . '/../views/layout/base.phtml';
     }

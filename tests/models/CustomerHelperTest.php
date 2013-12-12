@@ -11,7 +11,7 @@ use App\Model\CustomerHelper;
 
 class CustomerHelperTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSavesNewCustomers()
+    public function testRegisterNewCustomers()
     {
         $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
         $resource->expects($this->any())
@@ -35,7 +35,8 @@ class CustomerHelperTest extends \PHPUnit_Framework_TestCase
             ->will(($this->returnValue(42)));
 
         $customer_helper = new CustomerHelper($resource, $session);
-        $this->assertEquals('Vasia', $customer_helper->registerCustomer(['name' => 'Vasia', 'password' => '1234555'])->getName());
+        $this->assertEquals(true, $customer_helper->registerCustomer(['name' => 'Vasia', 'password' => '1234555']));
+        $this->assertEquals('Vasia', $customer_helper->getCustomer()->getName());
     }
 
     public function testLoginCustomers()
@@ -67,7 +68,8 @@ class CustomerHelperTest extends \PHPUnit_Framework_TestCase
             ->will(($this->returnValue(42)));
 
         $customer_helper = new CustomerHelper($resource, $session);
-        $this->assertEquals('Vasia', $customer_helper->loginCustomer(['name' => 'Vasia', 'password' => '1234555'])->getName());
+        $this->assertEquals(true, $customer_helper->loginCustomer(['name' => 'Vasia', 'password' => '1234555']));
+        $this->assertEquals('Vasia', $customer_helper->getCustomer()->getName());
     }
 
 }

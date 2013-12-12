@@ -25,7 +25,7 @@ class CustomerController
         if (isset($_POST['customer']) && ($customer = $customer_helper->loginCustomer($_POST['customer']) != null))
         {
             $session = new Session();
-            
+
             header('Location: /');
         } else
         {

@@ -63,6 +63,24 @@ class DBEntityTest
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
 
+    public function testFindsOnId()
+    {
+        $resource = $this->_getResource();
+        $this->assertEquals(['id' => 1, 'data' => 'foo'], $resource->find(1));
+    }
+
+    public function testCheckData()
+    {
+        $resource = $this->_getResource();
+        $this->assertEquals(1, $resource->check(['data' => 'foo']));
+    }
+
+    public function testFindsOnDataArray()
+    {
+        $resource = $this->_getResource();
+        $this->assertEquals(['id' => 2, 'data' => 'bar'], $resource->find(null, ['data' => 'bar']));
+    }
+
     public function getConnection()
     {
         $pdo = new \PDO('mysql:host=localhost;dbname=student_unit', 'root', '0000');

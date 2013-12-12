@@ -5,39 +5,37 @@
  * @date     12/9/13
  */
 
-
 namespace App\Controller;
 
 use App\Model\Resource\Table\Product as ProductTable;
 use App\Model\Resource\Session;
 
-use App\Model\CartHelper;
+use App\Model\Quote;
+use App\Model\QuoteItem;
+use App\Model\Product;
+use App\Model\QuoteItemCollection;
 use App\Model\Resource\Table\Cart as CartTable;
 use App\Model\Resource\Table\Customer as CustomerTable;
 use App\Model\Resource\DBCollection;
 use App\Model\Resource\DBEntity;
 use App\Model\CustomerHelper;
 
-
 class CartController {
 
     public function listAction()
     {
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $cartCollectionResource = new DBCollection($connection, new CartTable);
-
-
-        $cartElementResource = new DBEntity($connection, new CartTable);
-        $productResource = new DBEntity($connection, new ProductTable);
         $session = new Session();
-        $customerResource = new DBEntity($connection, new CustomerTable);
-        $customer_helper = new CustomerHelper($customerResource, $session);
+        $customerResource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
+        $customerHelper = new CustomerHelper($customerResource, $session);
+        $customerHelper->isLoggedIn();
+        $customer = $customerHelper->getCustomer();
 
-        $cart = new CartHelper($cartElementResource, $cartCollectionResource, $productResource, $customer_helper, $session);
+        $quote = $this->_initQuote($customerHelper, $session);
 
-
-        $elements = $cart->getList();
-        $customer = $customer_helper->checkCustomer();
+        $cartCollectionResource = new DBCollection($GLOBALS['PDO'], new CartTable);
+        $productResource = new DBEntity($GLOBALS['PDO'], new ProductTable);
+        $quoteItems = new QuoteItemCollection($cartCollectionResource, $productResource);
+        $quoteItems->filterByQuote($quote);
 
         $view = 'cart_list';
         require_once __DIR__ . '/../views/layout/base.phtml';
@@ -45,65 +43,78 @@ class CartController {
 
     public function removeAction()
     {
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $cartCollectionResource = new DBCollection($connection, new CartTable);
-
-        $cartElementResource = new DBEntity($connection, new CartTable);
-        $productResource = new DBEntity($connection, new ProductTable);
         $session = new Session();
-        $customerResource = new DBEntity($connection, new CustomerTable);
-        $customer_helper = new CustomerHelper($customerResource, $session);
-        $cart = new CartHelper($cartElementResource, $cartCollectionResource, $productResource, $customer_helper, $session);
+        $customerResource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
+        $customerHelper = new CustomerHelper($customerResource, $session);
+        $customerHelper->isLoggedIn();
+        $customer = $customerHelper->getCustomer();
 
-        $cart->remove($_GET['cart_element_id']);
+        $quoteResource = new DBEntity($GLOBALS['PDO'], new CartTable);
+
+        $quoteItem = $this->_initQuoteItem($customerHelper, $session);
+        $quoteItem->delete($quoteResource);
+
         header('Location: /?page=cart_list');
     }
 
     public function addAction()
     {
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $cartCollectionResource = new DBCollection($connection, new CartTable);
-
-        $cartElementResource = new DBEntity($connection, new CartTable);
-        $productResource = new DBEntity($connection, new ProductTable);
         $session = new Session();
-        $customerResource = new DBEntity($connection, new CustomerTable);
-        $customer_helper = new CustomerHelper($customerResource, $session);
-        $cart = new CartHelper($cartElementResource, $cartCollectionResource, $productResource, $customer_helper, $session);
+        $customerResource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
+        $customerHelper = new CustomerHelper($customerResource, $session);
+        $customerHelper->isLoggedIn();
+        $customer = $customerHelper->getCustomer();
 
-        $cart->addProductToCart($_GET['product_id']);
+        $quoteResource = new DBEntity($GLOBALS['PDO'], new CartTable);
+
+        $quoteItem = $this->_initQuoteItem($customerHelper, $session);
+
+        $quoteItem->addQty(empty($_POST['qty']) ? -1 : $_POST['qty']);
+
+        $quoteItem->save($quoteResource);
+
         header('Location: /?page=cart_list');
     }
 
-    public function addCountAction()
+    public function updateAction()
     {
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $cartCollectionResource = new DBCollection($connection, new CartTable);
-
-        $cartElementResource = new DBEntity($connection, new CartTable);
-        $productResource = new DBEntity($connection, new ProductTable);
         $session = new Session();
-        $customerResource = new DBEntity($connection, new CustomerTable);
-        $customer_helper = new CustomerHelper($customerResource, $session);
-        $cart = new CartHelper($cartElementResource, $cartCollectionResource, $productResource, $customer_helper, $session);
+        $customerResource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
+        $customerHelper = new CustomerHelper($customerResource, $session);
+        $customerHelper->isLoggedIn();
+        $customer = $customerHelper->getCustomer();
 
-        $cart->addCount($_GET['cart_element_id']);
+        $quoteResource = new DBEntity($GLOBALS['PDO'], new CartTable);
+
+        $quoteItem = $this->_initQuoteItem($customerHelper, $session);
+        $quoteItem->updateQty($_POST['qty']);
+        $quoteItem->save($quoteResource);
+
         header('Location: /?page=cart_list');
     }
 
-    public function minusCountAction()
+    private function _initQuoteItem($customer, $session)
     {
-        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
-        $cartCollectionResource = new DBCollection($connection, new CartTable);
+        $quote = $this->_initQuote($customer, $session);
 
-        $cartElementResource = new DBEntity($connection, new CartTable);
-        $productResource = new DBEntity($connection, new ProductTable);
-        $session = new Session();
-        $customerResource = new DBEntity($connection, new CustomerTable);
-        $customer_helper = new CustomerHelper($customerResource, $session);
-        $cart = new CartHelper($cartElementResource, $cartCollectionResource, $productResource, $customer_helper, $session);
+        $product = new Product([]);
+        $productResource = new DBEntity($GLOBALS['PDO'], new ProductTable);
+        $product->load($productResource, $_POST['product_id']);
 
-        $cart->minusCount($_GET['cart_element_id']);
-        header('Location: /?page=cart_list');
+        $quoteResource = new DBEntity($GLOBALS['PDO'], new CartTable);
+        $quoteItem = $quote->getItemForProduct($product, $quoteResource);
+        return $quoteItem;
+    }
+
+    private function _initQuote($customerHelper, $session)
+    {
+        $quote = new Quote();
+        if ($customerHelper->isLoggedIn()) {
+            $quote->loadByCustomer($customerHelper->getCustomer());
+            return $quote;
+        } else {
+            $quote->loadBySession($session);
+            return $quote;
+        }
     }
 } 
