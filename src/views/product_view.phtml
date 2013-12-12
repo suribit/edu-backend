@@ -19,19 +19,3 @@
     <p><input type="hidden" id="qty" name="qty" value="1"></p>
     <p><input type="submit" value="Add to cart"></p>
 </form>
-<div class="clear-fix"></div>
-<div>
-    <h3>Comment list:</h3>
-    <ul class="product-list">
-        <?php foreach ($reviews as $_review): ?>
-        <li class="product-item">
-            <p>Name User: <?php echo $_review->getName(); ?></p>
-            <p>Comment content: <?php echo $_review->getText(); ?></p>
-        </li>
-        <?php endforeach; ?>
-    </ul>
-    <?php for ($page = 1; $page <= $pagesComment->pageCount; $page++): ?>
-        <a href="/?page=product_view&id<?php echo $product->getId(); ?>&c=<?php echo $page; ?>"><?php echo $page; ?></a>
-    <?php endfor; ?>
-
-</div>
