@@ -61,6 +61,7 @@ class ProductController
             ->setItemCountPerPage(1)
             ->setCurrentPageNumber(isset($_GET['c']) ? $_GET['c'] : 1);
         $pagesComment = $paginator->getPages();
+        $resourceReview->filterBy('product_id', $product->getId());
         $reviews = new ProductReviewCollection($resourceReview);
 
         $resource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
