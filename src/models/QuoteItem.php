@@ -9,7 +9,6 @@
 namespace App\Model;
 
 use App\Model\Resource\IResourceEntity;
-use App\Model\Product;
 
 
 class QuoteItem extends Entity
@@ -38,16 +37,16 @@ class QuoteItem extends Entity
         }
     }
 
-    public function delete(IResourceEntity $resource)
+    public function delete()
     {
-        $resource->delete($this->getId());
+        $this->_resource->delete($this->getId());
     }
 
-    public function save(IResourceEntity $resource)
+    public function save()
     {
         if ($this->_data != null)
         {
-            $this->_data['cart_id'] = $resource->save($this->_data);
+            $this->_data['cart_id'] = $this->_resource->save($this->_data);
             return $this->_data['cart_id'];
         }
         else
@@ -57,9 +56,9 @@ class QuoteItem extends Entity
 
     }
 
-    public function check(IResourceEntity $resource)
+    public function check()
     {
-        return $resource->check($this->_data);
+        return $this->_resource->check($this->_data);
     }
 
     public function getProduct()
@@ -93,9 +92,9 @@ class QuoteItem extends Entity
         return (int) $this->_getData('cart_id');
     }
 
-    public function load(Resource\IResourceEntity $resource, $id)
+    public function load($id)
     {
-        $this->_data = $resource->find($id);
+        $this->_data = $this->_resource->find($id);
     }
 
     public function assignProduct(Product $product)

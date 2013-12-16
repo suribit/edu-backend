@@ -33,8 +33,8 @@ class ProductReview extends Entity
         return $product == $this->_getData('product');
     }
 
-    public function load(Resource\IResourceEntity $resource, $id)
+    public function load($id)
     {
-        $this->_data = $resource->find($id);
+        $this->_data = $this->_resource->find($id);
     }
 }

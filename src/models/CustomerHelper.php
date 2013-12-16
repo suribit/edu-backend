@@ -10,7 +10,6 @@ namespace App\Model;
 
 use App\Model\Resource\IResourceEntity;
 use App\Model\Resource\IResourceSession;
-use App\Model\Customer;
 
 
 class CustomerHelper {

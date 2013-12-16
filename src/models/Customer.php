@@ -5,7 +5,6 @@
  * @date     11/10/13
  */
 namespace App\Model;
-use App\Model\Resource\IResourceEntity;
 
 class Customer extends Entity
 {
@@ -14,25 +13,25 @@ class Customer extends Entity
         return $this->_getData('name');
     }
 
-    public function save(IResourceEntity $resource)
+    public function save()
     {
         $this->_data['password'] = md5($this->_data['password']);
-        $id = $resource->save($this->_data);
+        $id = $this->_resource->save($this->_data);
         $this->_data['customer_id'] = ($id != false) ? $id : null;
     }
 
-    public function check(IResourceEntity $resource)
+    public function check()
     {
         $this->_data['password'] = md5($this->_data['password']);
-        $this->_data['customer_id'] = $resource->check($this->_data);
+        $this->_data['customer_id'] = $this->_resource->check($this->_data);
         $this->_data['customer_id'] = isset($this->_data['customer_id']) ? $this->_data['customer_id'] : null;
 
         return (bool) $this->_data['customer_id'];
     }
 
-    public function load(Resource\IResourceEntity $resource, $id)
+    public function load($id)
     {
-        $this->_data = $resource->find($id);
+        $this->_data = $this->_resource->find($id);
     }
 
     public function getId()

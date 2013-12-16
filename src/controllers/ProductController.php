@@ -7,68 +7,69 @@
 namespace App\Controller;
 
 
-use App\Model\ProductReviewCollection;
-use App\Model\Resource\DBCollection;
 use App\Model\Resource\DBEntity;
-use App\Model\ProductCollection;
 use App\Model\Product;
-use App\Model\Resource\Paginator as PaginatorAdapter;
 use App\Model\Resource\Table\Product as ProductTable;
-use App\Model\Resource\Table\Review as ReviewTable;
-use Zend\Paginator\Paginator as ZendPaginator;
-use App\Model\Customer;
 use App\Model\Resource\Table\Customer as CustomerTable;
-use App\Model\Resource\Session;
 use App\Model\CustomerHelper;
 
 
 class ProductController
 {
+
+    private $_di;
+
+    public function __construct(\Zend\Di\Di $di)
+    {
+        $this->_di = $di;
+    }
+
     public function listAction()
     {
-        $resource = new DBCollection($GLOBALS['PDO'], new ProductTable);
-//        $products = new ProductCollection($resource);
+        $resourceCollection = $this->_di->get('ResourceCollection', ['table' => new \App\Model\Resource\Table\Product()]);
 
-        $paginatorAdapter = new PaginatorAdapter($resource);
-        $paginator = new ZendPaginator($paginatorAdapter);
+        $paginator = $this->_di->get('Paginator', ['collection' => $resourceCollection]);
         $paginator
             ->setItemCountPerPage(2)
             ->setCurrentPageNumber(isset($_GET['p']) ? $_GET['p'] : 1);
-         $pages = $paginator->getPages();
-         $products = new ProductCollection($resource);
+        $pages = $paginator->getPages();
 
-        $resource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
-        $customer_helper = new CustomerHelper($resource, (new Session()));
+        $products = $this->_di->get('ProductCollection', ['resource' => $resourceCollection]);
+        $resourceCustomer = $this->_di->get('ResourceEntity', ['table' => new \App\Model\Resource\Table\Customer()]);
+        $customerHelper = $this->_di->get('CustomerHelper', ['resource' => $resourceCustomer]);
+        $customerHelper->isLoggedIn();
+        $customer = $customerHelper->getCustomer();
 
-        $customer_helper->isLoggedIn();
-        $customer = $customer_helper->getCustomer();
-        $view = 'product_list';
-        require_once __DIR__ . '/../views/layout/base.phtml';
+        return $this->_di->get('View', [
+            'template' => 'product_list',
+            'params'   => ['products' => $products, 'pages' => $pages],
+            'customer' => $customer
+        ]);
     }
 
     public function viewAction()
     {
-        $product = new Product([]);
+        $product = $this->_di->get('Product', ['data' => [], 'table' => new \App\Model\Resource\Table\Product()]);
 
-        $resource = new DBEntity($GLOBALS['PDO'], new ProductTable);
-        $product->load($resource, $_GET['id']);
+        $product->load($_GET['id']);
 
-        $resourceReview = new DBCollection($GLOBALS['PDO'], new ReviewTable);
+//        $resourceReview = $this->_di->get('ProductReviewCollection', ['table' => new \App\Model\Resource\Table\ProductReviewCollection()]);
+//
+//
+//        $paginator = $this->_di->get('Paginator', ['collection' => $resourceReview]);
+//        $paginator
+//            ->setItemCountPerPage(1)
+//            ->setCurrentPageNumber(isset($_GET['c']) ? $_GET['c'] : 1);
+//        $pagesComment = $paginator->getPages();
+//
+//        $resourceReview->filterBy('product_id', $product->getId());
+//        $reviews = $this->_di->get('ProductReview');
 
-        $paginatorAdapter = new PaginatorAdapter($resourceReview);
-        $paginator = new ZendPaginator($paginatorAdapter);
-        $paginator
-            ->setItemCountPerPage(1)
-            ->setCurrentPageNumber(isset($_GET['c']) ? $_GET['c'] : 1);
-        $pagesComment = $paginator->getPages();
-        $resourceReview->filterBy('product_id', $product->getId());
-        $reviews = new ProductReviewCollection($resourceReview);
+        $resourceCustomer = $this->_di->get('ResourceEntity', ['table' => new \App\Model\Resource\Table\Customer()]);
+        $customerHelper = $this->_di->get('CustomerHelper', ['resource' => $resourceCustomer]);
+        $customerHelper->isLoggedIn();
+        $customer = $customerHelper->getCustomer();
 
-        $resource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
-        $customer_helper = new CustomerHelper($resource, (new Session()));
-
-        $customer_helper->isLoggedIn();
-        $customer = $customer_helper->getCustomer();
         $view = 'product_view';
         require_once __DIR__ . '/../views/layout/base.phtml';
     }

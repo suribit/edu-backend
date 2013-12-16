@@ -26,6 +26,11 @@ try {
     $actionName = 'notFoundAction';
 }
 
-$controller = new $controllerName;
-$controller->$actionName();
+$di = new \Zend\Di\Di();
+(new \App\Model\DiC($di))->assemble();
 
+$controller = new $controllerName($di);
+
+if ($view = $controller->$actionName()) {
+    $view->render();
+}
