@@ -34,7 +34,7 @@ class DiC
 
     private function _assembleDbConnection()
     {
-        $connection = new \PDO('mysql:host=localhost;dbname=student', 'root', '123123');
+        $connection = new \PDO('mysql:host=localhost;dbname=student', 'root', '0000');
         $this->_im->setParameters('App\Model\Resource\DBCollection', ['connection' => $connection]);
         $this->_im->setParameters('App\Model\Resource\DBEntity', ['connection' => $connection]);
     }
@@ -59,10 +59,36 @@ class DiC
     {
         $this->_im->setParameters('App\Model\ProductCollection', ['table' => 'App\Model\Resource\Table\Product']);
         $this->_im->addAlias('ProductCollection', 'App\Model\ProductCollection');
-        $this->_im->addAlias('Product', 'App\Model\Product');
 
         $this->im->setParameters('App\Model\Product', ['table' => 'App\Model\Resource\Table\Product']);
+        $this->_im->addAlias('Product', 'App\Model\Product');
+    }
 
+    private function _assembleCity()
+    {
+        $this->_im->setParameters('App\Model\CityCollection', ['table' => 'App\Model\Resource\Table\City']);
+        $this->_im->addAlias('CityCollection', 'App\Model\CityCollection');
+
+        $this->im->setParameters('App\Model\City', ['table' => 'App\Model\Resource\Table\City']);
+        $this->_im->addAlias('City', 'App\Model\City');
+    }
+
+    private function _assembleRegion()
+    {
+        $this->_im->setParameters('App\Model\RegionCollection', ['table' => 'App\Model\Resource\Table\Region']);
+        $this->_im->addAlias('RegionCollection', 'App\Model\RegionCollection');
+
+        $this->im->setParameters('App\Model\Region', ['table' => 'App\Model\Resource\Table\Region']);
+        $this->_im->addAlias('Region', 'App\Model\Region');
+    }
+
+    private function _assembleAddress()
+    {
+        $this->_im->setParameters('App\Model\AddressCollection', ['table' => 'App\Model\Resource\Table\Address']);
+        $this->_im->addAlias('AddressCollection', 'App\Model\AddressCollection');
+
+        $this->im->setParameters('App\Model\Address', ['table' => 'App\Model\Resource\Table\Address']);
+        $this->_im->addAlias('Address', 'App\Model\Address');
     }
 
     private function _assembleProductReview()
@@ -100,5 +126,9 @@ class DiC
             'params'      => [],
         ]);
         $this->_im->addAlias('View', 'App\Model\ModelView');
+
+        $this->_im->setParameters('App\Model\ISessionUser', [
+            'session' => $this->_di->get('Session')
+        ]);
     }
 }

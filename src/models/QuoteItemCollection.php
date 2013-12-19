@@ -38,37 +38,13 @@ class QuoteItemCollection
         }
     }
 
-//    public function assignProducts(Product $product, IResourceEntity $productResource)
-//    {
-//        $prototype = $product;
-//
-//
-//
-//        foreach ($this as &$_item)
-//        {
-//            $product = clone $prototype;
-//            $product->load($productResource, $_item->getProductId());
-//            $_item->assignProduct($product);
-//            var_dump($_item);
-//
-//        }
-//        echo '<br>';
-//        foreach ($this as $_item)
-//        {
-//
-//            var_dump($_item);
-//
-//        }
-//        die;
-//    }
-
     public function getQuotes()
     {
          return array_map(
             function ($data) {
                 $element = new QuoteItem($data);
-                $product = new Product([]);
-                $product->load($this->_productResource, $element->getProductId());
+                $product = new Product([], $this->_productResource);
+                $product->load($element->getProductId());
                 $element->assignProduct($product);
                 return $element;
             },

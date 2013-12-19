@@ -26,11 +26,11 @@ class CustomerHelper {
 
     public function registerCustomer($data)
     {
-        $customer = new Customer($data);
-        $customer->save($this->_resource);
+        $customer = new Customer($data, $this->_resource);
+        $customer->save();
         if ($customer->getId() != null)
         {
-            $customer->load($this->_resource, $customer->getId());
+            $customer->load($customer->getId());
             $this->_customer = $customer;
             return true;
         }
@@ -39,11 +39,11 @@ class CustomerHelper {
 
     public function loginCustomer($data)
     {
-        $customer = new Customer($data);
-        $customer->check($this->_resource);
+        $customer = new Customer($data, $this->_resource);
+        $customer->check();
         if ($customer->getId() != null)
         {
-            $customer->load($this->_resource, $customer->getId());
+            $customer->load($customer->getId());
             $this->_session->setData('idCustomer', $customer->getId());
             $this->_customer = $customer;
             return true;
@@ -55,8 +55,8 @@ class CustomerHelper {
     {
         if ($this->_session->getData('idCustomer'))
         {
-            $customer = new Customer([]);
-            $customer->load($this->_resource, $this->_session->getData('idCustomer'));
+            $customer = new Customer([], $this->_resource);
+            $customer->load($this->_session->getData('idCustomer'));
             $this->_customer = $customer;
             return true;
         }

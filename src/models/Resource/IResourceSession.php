@@ -8,6 +8,8 @@
 
  interface IResourceSession
  {
+     public function __construct();
+
      public function setData($key, $value);
 
      public function getData($key);
@@ -15,4 +17,10 @@
      public function getId();
 
      public function Clear();
+
+     public function generateToken();
+
+     public function getToken();
+
+     public function validateToken($token);
  }

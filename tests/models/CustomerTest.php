@@ -18,8 +18,8 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(['name' => 'Vasia', 'password' => md5('123456789')]))
             ->will($this->returnValue(11));
 
-        $customer = new Customer(['name' => 'Vasia', 'password' => '123456789']);
-        $customer->check($resource);
+        $customer = new Customer(['name' => 'Vasia', 'password' => '123456789'], $resource);
+        $customer->check();
         $this->assertEquals(11, $customer->getId());
     }
 
@@ -31,8 +31,8 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(['name' => 'Vasia', 'password' => md5('123456789')]))
             ->will($this->returnValue(11));
 
-        $customer = new Customer(['name' => 'Vasia', 'password' => '123456789']);
-        $this->assertEquals(true, $customer->check($resource));
+        $customer = new Customer(['name' => 'Vasia', 'password' => '123456789'], $resource);
+        $this->assertEquals(true, $customer->check());
         $this->assertEquals(11, $customer->getId());
     }
     
@@ -43,8 +43,8 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
             ->method('save')
             ->with($this->equalTo(['name' => 'Vasia', 'password' => md5('1234555')]));
 
-        $customer = new Customer(['name' => 'Vasia', 'password' => '1234555']);
-        $customer->save($resource);
+        $customer = new Customer(['name' => 'Vasia', 'password' => '1234555'], $resource);
+        $customer->save();
     }
 
     public function testGetsIdFromResourceAfterSave()
@@ -55,8 +55,8 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(['name' => 'Vasia', 'password' => md5('1234')]))
             ->will($this->returnValue(42));
 
-        $customer = new Customer(['name' => 'Vasia', 'password' => '1234']);
-        $customer->save($resource);
+        $customer = new Customer(['name' => 'Vasia', 'password' => '1234'], $resource);
+        $customer->save();
         $this->assertEquals(42, $customer->getId());
     }
 

@@ -15,62 +15,40 @@ use App\Model\CustomerHelper;
 
 
 class ProductController
+    extends ActionController
 {
-
-    private $_di;
-
-    public function __construct(\Zend\Di\Di $di)
-    {
-        $this->_di = $di;
-    }
 
     public function listAction()
     {
-        $resourceCollection = $this->_di->get('ResourceCollection', ['table' => new \App\Model\Resource\Table\Product()]);
-
-        $paginator = $this->_di->get('Paginator', ['collection' => $resourceCollection]);
+        $resource = $this->_di->get('ResourceCollection', ['table' => new \App\Model\Resource\Table\Product()]);
+        $paginator = $this->_di->get('Paginator', ['collection' => $resource]);
         $paginator
             ->setItemCountPerPage(2)
             ->setCurrentPageNumber(isset($_GET['p']) ? $_GET['p'] : 1);
         $pages = $paginator->getPages();
 
-        $products = $this->_di->get('ProductCollection', ['resource' => $resourceCollection]);
-        $resourceCustomer = $this->_di->get('ResourceEntity', ['table' => new \App\Model\Resource\Table\Customer()]);
-        $customerHelper = $this->_di->get('CustomerHelper', ['resource' => $resourceCustomer]);
-        $customerHelper->isLoggedIn();
-        $customer = $customerHelper->getCustomer();
+        $products = $this->_di->get('ProductCollection', ['resource' => $resource]);
 
         return $this->_di->get('View', [
             'template' => 'product_list',
-            'params'   => ['products' => $products, 'pages' => $pages],
-            'customer' => $customer
+            'params'   => ['products' => $products, 'pages' => $pages]
         ]);
+
     }
 
     public function viewAction()
     {
-        $product = $this->_di->get('Product', ['data' => [], 'table' => new \App\Model\Resource\Table\Product()]);
+        $this->_di->get('Session')->generateToken();
 
+        $product = $this->_di->get('Product');
         $product->load($_GET['id']);
 
-//        $resourceReview = $this->_di->get('ProductReviewCollection', ['table' => new \App\Model\Resource\Table\ProductReviewCollection()]);
-//
-//
-//        $paginator = $this->_di->get('Paginator', ['collection' => $resourceReview]);
-//        $paginator
-//            ->setItemCountPerPage(1)
-//            ->setCurrentPageNumber(isset($_GET['c']) ? $_GET['c'] : 1);
-//        $pagesComment = $paginator->getPages();
-//
-//        $resourceReview->filterBy('product_id', $product->getId());
-//        $reviews = $this->_di->get('ProductReview');
+        $reviews = $this->_di->get('ProductReviewCollection');
+        $reviews->filterByProduct($product);
 
-        $resourceCustomer = $this->_di->get('ResourceEntity', ['table' => new \App\Model\Resource\Table\Customer()]);
-        $customerHelper = $this->_di->get('CustomerHelper', ['resource' => $resourceCustomer]);
-        $customerHelper->isLoggedIn();
-        $customer = $customerHelper->getCustomer();
-
-        $view = 'product_view';
-        require_once __DIR__ . '/../views/layout/base.phtml';
+        return $this->_di->get('View', [
+            'template' => 'product_view',
+            'params'   => ['product' => $product, 'reviews' => $reviews]
+        ]);
     }
 }

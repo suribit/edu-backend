@@ -33,5 +33,37 @@
     <?php for ($page = 1; $page <= $pagesComment->pageCount; $page++): ?>
         <a href="/?page=product_view&id<?php echo $product->getId(); ?>&c=<?php echo $page; ?>"><?php echo $page; ?></a>
     <?php endfor; ?>
+    <form class="new-review" action="/?page=productReview_add" method="post">
+        <input type="hidden" name="token" value="<?php echo $this->session()->getToken(); ?>" />
+        <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>"/>
+        <div>
+            <label>Name</label>
+            <input type="text" name="name"/>
+        </div>
 
+        <div>
+            <label>Email</label>
+            <input type="text" name="email"/>
+        </div>
+
+        <div>
+            <label>Rating</label>
+            <select name="rating">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Text</label>
+            <textarea name="text"></textarea>
+        </div>
+
+        <div>
+            <input type="submit"/>
+        </div>
+    </form>
 </div>

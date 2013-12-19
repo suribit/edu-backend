@@ -10,9 +10,10 @@ class Entity
     protected $_data = array();
     protected $_resource;
 
-    public function __construct(array $data, Resource\IResourceEntity $resource = null)
+    public function __construct(array $data = [], Resource\IResourceEntity $resource = null)
     {
         $this->_data = $data;
+        $this->_resource = $resource;
     }
 
     protected function _getData($key)

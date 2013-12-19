@@ -18,9 +18,9 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(['customer_id' => 5, 'session_id' => null, 'product_id' => 12, 'qty' => 1]))
             ->will($this->returnValue(42));
 
-        $item = new QuoteItem(['customer_id' => 5, 'session_id' => null, 'product_id' => 12]);
+        $item = new QuoteItem(['customer_id' => 5, 'session_id' => null, 'product_id' => 12], $resource);
         $item->addQty(1);
-        $this->assertEquals(42, $item->save($resource));
+        $this->assertEquals(42, $item->save());
         $this->assertEquals(42, $item->getId());
     }
 
@@ -32,9 +32,9 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(null))
             ->will($this->returnValue(-1));
 
-        $item = new QuoteItem(['customer_id' => 5, 'session_id' => null, 'product_id' => 12]);
+        $item = new QuoteItem(['customer_id' => 5, 'session_id' => null, 'product_id' => 12], $resource);
         $item->addQty(0);
-        $this->assertEquals(-1, $item->save($resource));
+        $this->assertEquals(-1, $item->save());
         $this->assertEquals(null, $item->getId());
     }
 
@@ -46,9 +46,9 @@ class QuoteItemTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(['customer_id' => 5, 'session_id' => null, 'product_id' => 12, 'qty' => 2]))
             ->will($this->returnValue(42));
 
-        $item = new QuoteItem(['customer_id' => 5, 'session_id' => null, 'product_id' => 12, 'qty' => 1]);
+        $item = new QuoteItem(['customer_id' => 5, 'session_id' => null, 'product_id' => 12, 'qty' => 1], $resource);
         $item->updateQty(1);
-        $this->assertEquals(42, $item->save($resource));
+        $this->assertEquals(42, $item->save());
         $this->assertEquals(42, $item->getId());
     }
 }

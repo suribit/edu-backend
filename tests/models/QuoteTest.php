@@ -17,7 +17,7 @@ class QuoteTest extends \PHPUnit_Framework_TestCase
         $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
         $resource->expects($this->any())
             ->method('check')
-            ->with($this->equalTo(['customer_id' => 5, 'session_id' => null, 'product_id' => 12]))
+            ->with($this->equalTo(['customer_id' => 5, 'product_id' => 12]))
             ->will($this->returnValue(42));
         $resource->expects($this->any())
             ->method('find')
@@ -30,8 +30,8 @@ class QuoteTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(['name' => 'Vasia', 'password' => md5('1234555')]))
             ->will($this->returnValue(5));
 
-        $customer = new Customer(['name' => 'Vasia', 'password' => '1234555']);
-        $customer->save($resourceCustomer);
+        $customer = new Customer(['name' => 'Vasia', 'password' => '1234555'], $resourceCustomer);
+        $customer->save();
 
         $resourceProduct = $this->getMock('\App\Model\Resource\IResourceEntity');
         $resourceProduct->expects($this->any())
@@ -39,8 +39,8 @@ class QuoteTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(12))
             ->will($this->returnValue(['product_id' => 12, 'name' => 'nokla']));
 
-        $product = new Product([]);
-        $product->load($resourceProduct, 12);
+        $product = new Product([], $resourceProduct);
+        $product->load(12);
 
         $quote = new Model\Quote();
         $quote->loadByCustomer($customer);

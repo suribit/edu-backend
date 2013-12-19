@@ -37,4 +37,9 @@ class ProductReview extends Entity
     {
         $this->_data = $this->_resource->find($id);
     }
+
+    public function save()
+    {
+        $this->_resource->save($this->_data);
+    }
 }

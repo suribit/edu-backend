@@ -43,15 +43,15 @@ class Quote
 
         if ($this->_customerId != null)
         {
-            $item = new QuoteItem(['customer_id' => $this->_customerId, 'product_id' => $product->getId()]);
+            $item = new QuoteItem(['customer_id' => $this->_customerId, 'product_id' => $product->getId()], $resource);
         }
         else
         {
-            $item = new QuoteItem(['session_id' => $this->_sessionId, 'product_id' => $product->getId()]);
+            $item = new QuoteItem(['session_id' => $this->_sessionId, 'product_id' => $product->getId()], $resource);
         }
-        if (($cart_id = $item->check($resource)) != null)
+        if (($cart_id = $item->check()) != null)
         {
-            $item->load($resource, $cart_id);
+            $item->load($cart_id);
         }
         return $item;
     }
