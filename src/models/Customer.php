@@ -8,6 +8,21 @@ namespace App\Model;
 
 class Customer extends Entity
 {
+    public function __construct(array $data = [], Resource\IResourceEntity $resource = null)
+    {
+        if (isset($data['password']))
+            $data['password'] = md5($data['password']);
+
+        parent::__construct($data, $resource);
+    }
+
+    public function setData($data)
+    {
+        if ($data['password'] != null)
+            $data['password'] = md5($data['password']);
+
+        parent::setData($data);
+    }
     public function getName()
     {
         return $this->_getData('name');
@@ -31,14 +46,6 @@ class Customer extends Entity
     public function getQuoteId()
     {
         return $this->_getData('quote_id');
-    }
-
-    public function save()
-    {
-        if ($this->getPassword() != null)
-            $this->_data['password'] = md5($this->_data['password']);
-
-        parent::save();
     }
 
 }

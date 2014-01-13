@@ -70,9 +70,13 @@ class DiC
     private function _assembleCustomer()
     {
         $this->_im->setParameters('App\Model\Customer', ['table' => 'App\Model\Resource\Table\Customer']);
+        $this->_im->setShared('App\Model\Customer', false);
         $this->_im->addAlias('Customer', 'App\Model\Customer');
 
-        $this->_im->setParameters('App\Model\CustomerCollection', ['table' => 'App\Model\Resource\Table\Customer']);
+        $this->_im->setParameters('App\Model\CustomerCollection', [
+            'table' => 'App\Model\Resource\Table\Customer',
+            'productPrototype' => 'App\Model\Customer'
+        ]);
         $this->_im->addAlias('CustomerCollection', 'App\Model\CustomerCollection');
     }
 

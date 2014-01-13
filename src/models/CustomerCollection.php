@@ -12,15 +12,24 @@ class CustomerCollection
     implements \IteratorAggregate
 {
     private $_resource;
+    private $_prototype;
 
-    public function __construct(Resource\IResourceCollection $resource)
+    public function __construct(Resource\IResourceCollection $resource, Customer $customerPrototype)
     {
         $this->_resource = $resource;
+        $this->_prototype = $customerPrototype;
     }
 
     public function getCustomers()
     {
-        return [];
+        return array_map(
+            function ($data) {
+                $customer = clone $this->_prototype;
+                $customer->setData($data);
+                return $customer;
+            },
+            $this->_resource->fetch()
+        );
     }
 
     public function getIterator()
@@ -30,7 +39,7 @@ class CustomerCollection
 
     public function checkUser(Customer $customer)
     {
-        $id = $this->_resource->check(['name' => $customer->getName(), 'password' => md5($customer->getPassword())]);
+        $id = $this->_resource->check(['name' => $customer->getName(), 'password' => $customer->getPassword()]);
         $customer->load($id);
         return $id;
     }

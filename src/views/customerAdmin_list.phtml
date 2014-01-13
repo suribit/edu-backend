@@ -1,0 +1,25 @@
+<h1 class="page-header">Our Product List</h1>
+<ul class="product-list">
+    <?php for ($page = 1; $page <= $this->get('pages')->pageCount; $page++): ?>
+        <a href="/?page=customerAdmin_list&p=<?php echo $page; ?>"><?php echo $page; ?></a>
+    <?php endfor; ?>
+    <table border="1">
+    <thead>
+    <tr>
+        <th>Имя</th>
+        <th>E-mail</th>
+        <th>Действие</th>
+    </tr>
+    </thead>
+        <tbody>
+
+        <?php foreach ($this->get('customers') as $_customer): ?>
+        <tr>
+            <td><a href="customerAdmin_edit&customer_id=<?php echo $_customer->getId(); ?>"><?php echo $_customer->getName(); ?></a></td>
+            <td><a href="customerAdmin_edit&customer_id=<?php echo $_customer->getId(); ?>"><?php echo $_customer->getEmail(); ?></a></td>
+            <td><a href="customerAdmin_remove&customer_id=<?php echo $_customer->getId(); ?>">Удалить</a></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</ul>

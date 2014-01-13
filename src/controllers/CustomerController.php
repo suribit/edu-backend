@@ -51,7 +51,10 @@ class CustomerController
             if (isset($_POST['customer']))
             {
                 if ($this->_registerCustomer())
-                    $this->_loginCustomer(['name' => $_POST['customer'], 'password' => $_POST['customer']['password']]);
+                {
+                    $this->_loginCustomer(['name' => $_POST['customer']['name'], 'password' => $_POST['customer']['password']]);
+                }
+
                 $this->_redirect('product_list');
             }
             return $this->_di->get('View', [
@@ -68,9 +71,9 @@ class CustomerController
 
     private function _loginCustomer($data)
     {
-        $customerTemp = $this->_di->get('Customer', ['data' => $data]);
-        $customers = $this->_di->get('CustomerCollection');
+        $customerTemp = clone $this->_di->get('Customer', ['data' => $data]);
 
+        $customers = $this->_di->get('CustomerCollection');
 
         if (($id = $customers->checkUser($customerTemp)) != null)
         {
@@ -87,7 +90,7 @@ class CustomerController
 
     private function _registerCustomer()
     {
-        $customer = $this->_di->get('Customer', ['data' => $_POST['customer']]);
+        $customer = clone $this->_di->get('Customer', ['data' => $_POST['customer']]);
 
         try
         {
