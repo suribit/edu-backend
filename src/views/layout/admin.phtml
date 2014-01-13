@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="public/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="public/css/main.css"/>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div class="login">
+    <h1>ADMIN</h1>
+
+    <?php if($this->session()->adminIsLoggedIn()):
+        echo $this->session()->getAdminItem()->getName();?>
+        <a href="?page=admin_logout">Logout</a>
+    <?php endif; ?>
+    <?php if(!$this->session()->adminIsLoggedIn()): ?>
+        <a href="?page=admin_login">Login</a>
+    <?php endif; ?>
+</div>
+<?php if($this->session()->adminIsLoggedIn()): ?>
+    <div class="menu">
+    <ul>
+        <li><a href="?page=productAdmin_list">Товары</a></li>
+        <li><a href="">Отзывы</a></li>
+        <li><a href="customerAdmin_list">Клиенты</a></li>
+        <li><a href="">Заказы</a></li>
+        <li><a href="">Скидачные купоны</a></li>
+        <li><a href="">Доставка</a></li>
+    </ul>
+    </div>
+<?php endif; ?>
+
+<div class="page-content">
+    <?php $this->renderTemplate() ?>
+</div>
+</body>
+</html>

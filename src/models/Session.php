@@ -12,13 +12,15 @@ use App\Model\Resource\DBEntity;
 class Session
 {
     private $_customerResource;
+    private $_adminItemResource;
 
-    public function __construct(DBEntity $customerResource)
+    public function __construct(DBEntity $customerResource, DBEntity $adminItemResource)
     {
         if (session_status() != PHP_SESSION_ACTIVE)
             session_start();
 
         $this->_customerResource = $customerResource;
+        $this->_adminItemResource = $adminItemResource;
     }
 
     public function isLoggedIn()
@@ -26,13 +28,29 @@ class Session
         return isset($_SESSION['user_id']);
     }
 
+    public function adminIsLoggedIn()
+    {
+        return isset($_SESSION['admin_id']);
+    }
+
+    public function getAdminItem()
+    {
+        if (!($this->adminIsLoggedIn()))
+            return null;
+
+        $admin = new AdminItem([], $this->_adminItemResource);
+        $admin->load($this->getUserId());
+
+        return $admin;
+    }
+
     public function getCustomer()
     {
-        if (!($userId = $this->isLoggedIn()))
+        if (!($this->isLoggedIn()))
             return null;
 
         $customer = new Customer([], $this->_customerResource);
-        $customer->load($userId);
+        $customer->load($this->getUserId());
 
         return $customer;
     }
@@ -69,9 +87,19 @@ class Session
         $_SESSION['user_id'] = $id;
     }
 
+    public function setAdminId($id)
+    {
+        $_SESSION['admin_id'] = $id;
+    }
+
     public function getUserId()
     {
         return isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+    }
+
+    public function getAdminId()
+    {
+        return isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : null;
     }
 
     public function setData($key, $value)
@@ -91,7 +119,12 @@ class Session
 
     public function logout()
     {
-        $_SESSION['userId'] = null;
+        $_SESSION['user_id'] = null;
+    }
+
+    public function logoutAdmin()
+    {
+        $_SESSION['admin_id'] = null;
     }
 
     public function Clear()
