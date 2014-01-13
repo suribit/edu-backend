@@ -24,14 +24,6 @@ class DBEntityTest
         $this->assertEquals(['id' => 2, 'data' => 'bar'], $resource->find('2 - 1'));
     }
 
-    public function testCheckDataInDb()
-    {
-        $resource = $this->_getResource();
-        $this->assertEquals(1, $resource->check(['id' => 1, 'data' => 'foo']));
-        $this->assertEquals(2, $resource->check(['id' => 2, 'data' => 'bar']));
-        $this->assertEquals(false, $resource->check(['id' => 3, 'data' => 'bars']));
-    }
-
     public function testSavesDataInDb()
     {
         $resource = $this->_getResource();
@@ -63,22 +55,10 @@ class DBEntityTest
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
 
-    public function testFindsOnId()
+    public function testRetrievesPrimaryKeyFromTable()
     {
         $resource = $this->_getResource();
-        $this->assertEquals(['id' => 1, 'data' => 'foo'], $resource->find(1));
-    }
-
-    public function testCheckData()
-    {
-        $resource = $this->_getResource();
-        $this->assertEquals(1, $resource->check(['data' => 'foo']));
-    }
-
-    public function testFindsOnDataArray()
-    {
-        $resource = $this->_getResource();
-        $this->assertEquals(['id' => 2, 'data' => 'bar'], $resource->find(null, ['data' => 'bar']));
+        $this->assertEquals('id', $resource->getPrimaryKeyField());
     }
 
     public function getConnection()

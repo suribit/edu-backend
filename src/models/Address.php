@@ -5,11 +5,7 @@
  * @date     12/19/13
  */
 
-
 namespace App\Model;
-
-use App\Model\City;
-use App\Model\Region;
 
 class Address
     extends Entity
@@ -46,7 +42,7 @@ class Address
     {
         return $this->_getData('region_id');
     }
-    
+
     public function getId()
     {
         return $this->_getData('address_id');
@@ -84,4 +80,4 @@ class Address
 
         return $this->_resource->save($this->_data);
     }
-} 
+}

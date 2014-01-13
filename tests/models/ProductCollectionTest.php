@@ -6,6 +6,7 @@
  */
 
 namespace Test\Model;
+use App\Model\Product;
 use \App\Model\ProductCollection;
 
 class ProductCollectionTest extends \PHPUnit_Framework_TestCase
@@ -21,7 +22,7 @@ class ProductCollectionTest extends \PHPUnit_Framework_TestCase
                 ]
             ));
 
-        $collection = new ProductCollection($resource);
+        $collection = new ProductCollection($resource, new Product());
 
         $products = $collection->getProducts();
         $this->assertEquals('Nokla', $products[0]->getName());
@@ -39,7 +40,7 @@ class ProductCollectionTest extends \PHPUnit_Framework_TestCase
                 ]
             ));
 
-        $collection = new ProductCollection($resource);
+        $collection = new ProductCollection($resource, new Product);
         $expected = array(0 => 'foo', 1 => 'bar');
         $iterated = false;
         foreach ($collection as $_key => $_product) {

@@ -2,6 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="public/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="public/css/main.css"/>
     <title>Student Webstore</title>
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/main.css">
@@ -9,17 +10,16 @@
 <body>
 <div class="login">
     <a href="?page=cart_list">My cart</a> |
-    <?php if($customer != null && $customer->getName() != null):
-        echo $customer->getName();?>
+    <?php if($this->session()->getCustomer() != null):
+        echo $this->session()->getCustomer()->getName();?>
         <a href="?page=customer_logout">Logout</a>
     <?php endif; ?>
-    <?php if($customer == null || $customer->getName() == null): ?>
+    <?php if($this->session()->getCustomer() == null): ?>
         <a href="?page=customer_login">Login</a> |
         <a href="?page=customer_register">Sign Up</a>
     <?php endif; ?>
-</div>
-<div class="page-content">
-    <?php require_once __DIR__ . "/../{$view}.phtml"; ?>
+</div><div class="page-content">
+    <?php $this->renderTemplate() ?>
 </div>
 </body>
 </html>

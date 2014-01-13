@@ -2,18 +2,18 @@
 /**
  * @project  edu-backend
  * @author   Seregei Waribrus <wss.world@gmail.com>
- * @date     12/9/13
+ * @date     1/5/14
  */
 namespace App\Model\Resource\Table;
-class Cart implements ITable
+class QuoteItem implements ITable
 {
     public function getName()
     {
-        return 'cart';
+        return 'quote_items';
     }
 
     public function getPrimaryKey()
     {
-        return 'cart_id';
+        return 'item_id';
     }
 }

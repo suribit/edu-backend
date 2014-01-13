@@ -6,56 +6,97 @@
  */
 namespace App\Controller;
 
-use App\Model\Resource\DBCollection;
-use App\Model\Resource\DBEntity;
-use App\Model\Customer;
-use App\Model\Resource\Session;
-use App\Model\Resource\Table\Customer as CustomerTable;
-use App\Model\CustomerHelper;
 
 class CustomerController
+    extends ActionController
 {
 
     public function loginAction()
     {
-        $resource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
-        $customer_helper = new CustomerHelper($resource, (new Session()));
-
-        $customer = null;
-        if (isset($_POST['customer']) && ($customer = $customer_helper->loginCustomer($_POST['customer']) != null))
+        if (!$this->_session->isLoggedIn())
         {
-            $session = new Session();
+            if (isset($_POST['customer']))
+            {
 
-            header('Location: /');
-        } else
-        {
-            $view = 'customer_login';
-            require_once __DIR__ . '/../views/layout/base.phtml';
+                if ($this->_loginCustomer($_POST['customer']))
+                {
+
+                    $this->_redirect('product_list');
+                }
+                else
+                    $this->_redirect('customer_login', ['error_login' => true]);
+            }
+            return $this->_di->get('View', [
+                'template' => 'customer_login',
+                'params'   => []
+            ]);
         }
+        else
+        {
+            $this->_redirect('product_list');
+        }
+
     }
 
     public function logoutAction()
     {
-        $session = new Session();
-        $session->Clear();
-        header('Location: /');
+        $this->_session->logout();
+        $this->_redirect('product_list');
     }
 
     public function registerAction()
     {
-        $resource = new DBEntity($GLOBALS['PDO'], new CustomerTable);
-        $customer_helper = new CustomerHelper($resource, (new Session()));
-
-        $customer = null;
-        if (isset($_POST['customer']) && ($customer = $customer_helper->registerCustomer($_POST['customer']) != null))
+        if (!$this->_session->isLoggedIn())
         {
-            header('Location: /?page=customer_login');
-        } else
-        {
-            $view = 'customer_register';
-            require_once __DIR__ . '/../views/layout/base.phtml';
+            if (isset($_POST['customer']))
+            {
+                if ($this->_registerCustomer())
+                    $this->_loginCustomer(['name' => $_POST['customer'], 'password' => $_POST['customer']['password']]);
+                $this->_redirect('product_list');
+            }
+            return $this->_di->get('View', [
+                'template' => 'customer_register',
+                'params'   => []
+            ]);
         }
+        else
+        {
+            $this->_redirect('product_list');
+        }
+
     }
 
+    private function _loginCustomer($data)
+    {
+        $customerTemp = $this->_di->get('Customer', ['data' => $data]);
+        $customers = $this->_di->get('CustomerCollection');
 
+
+        if (($id = $customers->checkUser($customerTemp)) != null)
+        {
+            $this->_session->setUserId($id);
+            if (($quoteId = $this->_session->getQuoteId()) != null)
+            {
+                $customerTemp->setQuoteId($quoteId);
+                $customerTemp->save();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private function _registerCustomer()
+    {
+        $customer = $this->_di->get('Customer', ['data' => $_POST['customer']]);
+
+        try
+        {
+            $customer->save();
+        } catch (\Exception $ex)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }

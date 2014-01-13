@@ -13,29 +13,32 @@ class Customer extends Entity
         return $this->_getData('name');
     }
 
+    public function getPassword()
+    {
+        return $this->_getData('password');
+    }
+
+    public function getEmail()
+    {
+        return $this->_getData('email');
+    }
+
+    public function setQuoteId($id)
+    {
+        $this->_data['quote_id'] = $id;
+    }
+
+    public function getQuoteId()
+    {
+        return $this->_getData('quote_id');
+    }
+
     public function save()
     {
-        $this->_data['password'] = md5($this->_data['password']);
-        $id = $this->_resource->save($this->_data);
-        $this->_data['customer_id'] = ($id != false) ? $id : null;
+        if ($this->getPassword() != null)
+            $this->_data['password'] = md5($this->_data['password']);
+
+        parent::save();
     }
 
-    public function check()
-    {
-        $this->_data['password'] = md5($this->_data['password']);
-        $this->_data['customer_id'] = $this->_resource->check($this->_data);
-        $this->_data['customer_id'] = isset($this->_data['customer_id']) ? $this->_data['customer_id'] : null;
-
-        return (bool) $this->_data['customer_id'];
-    }
-
-    public function load($id)
-    {
-        $this->_data = $this->_resource->find($id);
-    }
-
-    public function getId()
-    {
-        return $this->_getData('customer_id');
-    }
 }

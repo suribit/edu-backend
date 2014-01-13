@@ -19,10 +19,13 @@ class DBEntity
         $this->_table = $table;
     }
 
-    public function check($data)
+    public function find($id)
     {
-        $stmt = $this->_prepareSql($data/*, $this->_table->getPrimaryKey()*/);
-        return $stmt->fetch(\PDO::FETCH_ASSOC)[$this->_table->getPrimaryKey()];
+        $stmt = $this->_connection->prepare(
+            "SELECT * FROM {$this->_table->getName()} WHERE {$this->_table->getPrimaryKey()} = :id"
+        );
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     public function delete($id)
@@ -34,39 +37,6 @@ class DBEntity
         $smtm->execute();
     }
 
-    protected function _prepareSql($data, $columns = '*')
-    {
-        $fields = array_keys($data);
-        $check = array_map(function ($field) {
-            return "{$field} = :{$field}";
-        }, $fields);
-        $whereList = implode(' AND ', $check);
-
-        $sql = "SELECT {$columns} FROM {$this->_table->getName()} WHERE {$whereList}";
-        $stmt = $this->_connection->prepare($sql);
-        $stmt->execute(array_combine($this->_prepareBind($fields), $data));
-
-        return $stmt;
-    }
-
-    public function find($id = null, $data = null)
-    {
-        if ($id != null)
-        {
-            $stmt = $this->_connection->prepare(
-                "SELECT * FROM {$this->_table->getName()} WHERE {$this->_table->getPrimaryKey()} = :id"
-            );
-            $stmt->execute([':id' => $id]);
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
-        }
-        else
-        {
-            $stmt = $this->_prepareSql($data);
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
-        }
-
-    }
-
     public function save($data)
     {
         $fields = array_keys($data);
@@ -75,9 +45,7 @@ class DBEntity
         } else {
             $stmt = $this->_insertItem($fields);
         }
-
-        if(!$stmt->execute(array_combine($this->_prepareBind($fields), $data)))
-            return false;
+        $stmt->execute(array_combine($this->_prepareBind($fields), $data));
         return $this->_connection->lastInsertId($this->_table->getPrimaryKey());
     }
 
@@ -124,5 +92,10 @@ class DBEntity
         );
 
         return $stmt;
+    }
+
+    public function getPrimaryKeyField()
+    {
+        return $this->_table->getPrimaryKey();
     }
 }

@@ -8,6 +8,8 @@ namespace App\Model;
 
 class ProductReview extends Entity
 {
+    private $_product;
+
     public function getName()
     {
         return $this->_getData('name');
@@ -20,7 +22,7 @@ class ProductReview extends Entity
 
     public function getText()
     {
-        return $this->_getData('text');
+        return $this->_getData('text_review');
     }
 
     public function getRating()
@@ -30,16 +32,12 @@ class ProductReview extends Entity
 
     public function belongsToProduct(Product $product)
     {
-        return $product == $this->_getData('product');
+        return $product->getId() == $this->_getData('product_id');
     }
 
-    public function load($id)
+    public function assignToProduct(Product $product)
     {
-        $this->_data = $this->_resource->find($id);
-    }
-
-    public function save()
-    {
-        $this->_resource->save($this->_data);
+        $this->_data['product_id'] = $product->getId();
+        $this->_product = $product;
     }
 }

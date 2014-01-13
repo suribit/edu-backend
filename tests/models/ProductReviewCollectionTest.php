@@ -6,6 +6,7 @@
  */
 
 namespace Test\Model;
+use App\Model\ProductReview;
 use \App\Model\ProductReviewCollection;
 use \App\Model\Product;
 
@@ -22,7 +23,8 @@ class ProductReviewCollectionTest extends \PHPUnit_Framework_TestCase
                 ]
             ));
 
-        $collection = new ProductReviewCollection($resource);
+        $productReview = new ProductReview([]);
+        $collection = new ProductReviewCollection($resource, $productReview);
 
         $reviews = $collection->getReviews();
         $this->assertEquals('Vasia', $reviews[0]->getName());
@@ -40,7 +42,8 @@ class ProductReviewCollectionTest extends \PHPUnit_Framework_TestCase
                 ]
             ));
 
-        $collection = new ProductReviewCollection($resource);
+        $productReview = new ProductReview([]);
+        $collection = new ProductReviewCollection($resource, $productReview);
         $expected = array(0 => 'Vasia', 1 => 'Petia');
         $iterated = false;
         foreach ($collection as $_key => $_productReview) {
@@ -58,13 +61,19 @@ class ProductReviewCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testFiltersCollectionByProduct($productId)
     {
-        $product = new Product(['product_id' => $productId]);
+        $productResource = $this->getMock('\App\Model\Resource\IResourceEntity');
+        $productResource->expects($this->any())
+            ->method('getPrimaryKeyField')
+            ->will($this->returnValue('product_id'));
+        $product = new Product(['product_id' => $productId], $productResource);
+
         $resource = $this->getMock('\App\Model\Resource\IResourceCollection');
         $resource->expects($this->any())
             ->method('filterBy')
             ->with($this->equalTo('product_id'), $this->equalTo($productId));
 
-        $collection = new ProductReviewCollection($resource);
+        $productReview = new ProductReview([]);
+        $collection = new ProductReviewCollection($resource, $productReview);
 
         $collection->filterByProduct($product);
     }
@@ -81,7 +90,8 @@ class ProductReviewCollectionTest extends \PHPUnit_Framework_TestCase
             ->method('average')
             ->with($this->equalTo('rating'));
 
-        $collection = new ProductReviewCollection($resource);
+        $productReview = new ProductReview([]);
+        $collection = new ProductReviewCollection($resource, $productReview);
         $collection->getAverageRating();
     }
 

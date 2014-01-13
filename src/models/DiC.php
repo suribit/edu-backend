@@ -4,8 +4,6 @@
  * @author   Seregei Waribrus <wss.world@gmail.com>
  * @date     12/12/13
  */
-
-
 namespace App\Model;
 
 use Zend\Di\Di;
@@ -30,11 +28,12 @@ class DiC
                 $_method->invoke($this);
             }
         }
+
     }
 
     private function _assembleDbConnection()
     {
-        $connection = new \PDO('mysql:host=localhost;dbname=student', 'root', '0000');
+        $connection = new \PDO('mysql:host=localhost;dbname=shop', 'root', '0000');
         $this->_im->setParameters('App\Model\Resource\DBCollection', ['connection' => $connection]);
         $this->_im->setParameters('App\Model\Resource\DBEntity', ['connection' => $connection]);
     }
@@ -43,10 +42,11 @@ class DiC
     {
         $this->_im->addTypePreference('App\Model\Resource\IResourceCollection', 'App\Model\Resource\DBCollection');
         $this->_im->addTypePreference('App\Model\Resource\IResourceEntity', 'App\Model\Resource\DBEntity');
-        $this->_im->addTypePreference('App\Model\Resource\IResourceSession', 'App\Model\Resource\Session');
         $this->_im->addAlias('ResourceCollection', 'App\Model\Resource\DBCollection');
-        $this->_im->addAlias('ResourceEntity', 'App\Model\Resource\DBEntity');
-        $this->_im->addAlias('Session', 'App\Model\Resource\Session');
+
+        $this->_im->setShared('App\Model\Resource\DBEntity', false);
+        $this->_im->setShared('App\Model\Resource\DBCollection', false);
+
     }
 
     private function _assemblePaginator()
@@ -57,64 +57,35 @@ class DiC
 
     private function _assembleProduct()
     {
-        $this->_im->setParameters('App\Model\ProductCollection', ['table' => 'App\Model\Resource\Table\Product']);
-        $this->_im->addAlias('ProductCollection', 'App\Model\ProductCollection');
-
-        $this->im->setParameters('App\Model\Product', ['table' => 'App\Model\Resource\Table\Product']);
+        $this->_im->setParameters('App\Model\Product', ['table' => 'App\Model\Resource\Table\Product']);
         $this->_im->addAlias('Product', 'App\Model\Product');
-    }
 
-    private function _assembleCity()
-    {
-        $this->_im->setParameters('App\Model\CityCollection', ['table' => 'App\Model\Resource\Table\City']);
-        $this->_im->addAlias('CityCollection', 'App\Model\CityCollection');
-
-        $this->im->setParameters('App\Model\City', ['table' => 'App\Model\Resource\Table\City']);
-        $this->_im->addAlias('City', 'App\Model\City');
-    }
-
-    private function _assembleRegion()
-    {
-        $this->_im->setParameters('App\Model\RegionCollection', ['table' => 'App\Model\Resource\Table\Region']);
-        $this->_im->addAlias('RegionCollection', 'App\Model\RegionCollection');
-
-        $this->im->setParameters('App\Model\Region', ['table' => 'App\Model\Resource\Table\Region']);
-        $this->_im->addAlias('Region', 'App\Model\Region');
-    }
-
-    private function _assembleAddress()
-    {
-        $this->_im->setParameters('App\Model\AddressCollection', ['table' => 'App\Model\Resource\Table\Address']);
-        $this->_im->addAlias('AddressCollection', 'App\Model\AddressCollection');
-
-        $this->im->setParameters('App\Model\Address', ['table' => 'App\Model\Resource\Table\Address']);
-        $this->_im->addAlias('Address', 'App\Model\Address');
-    }
-
-    private function _assembleProductReview()
-    {
-        $this->_im->setParameters('App\Model\ProductReviewCollection', ['table' => 'App\Model\Resource\Table\Review']);
-        $this->_im->addAlias('ProductReviewCollection', 'App\Model\ProductReviewCollection');
-
-        $this->im->setParameters('App\Model\ProductReview', ['table' => 'App\Model\Resource\Table\Review']);
-        $this->_im->addAlias('ProductReview', 'App\Model\ProductReview');
+        $this->_im->setParameters('App\Model\ProductCollection', [
+            'table' => 'App\Model\Resource\Table\Product',
+            'productPrototype' => 'App\Model\Product'
+        ]);
+        $this->_im->addAlias('ProductCollection', 'App\Model\ProductCollection');
     }
 
     private function _assembleCustomer()
     {
         $this->_im->setParameters('App\Model\Customer', ['table' => 'App\Model\Resource\Table\Customer']);
         $this->_im->addAlias('Customer', 'App\Model\Customer');
-        $this->_im->addAlias('CustomerHelper', 'App\Model\CustomerHelper');
+
+        $this->_im->setParameters('App\Model\CustomerCollection', ['table' => 'App\Model\Resource\Table\Customer']);
+        $this->_im->addAlias('CustomerCollection', 'App\Model\CustomerCollection');
     }
 
-    private function _assembleQuote()
+    private function _assembleProductReviews()
     {
-        $this->_im->setParameters('App\Model\QuoteItemCollection', ['table' => 'App\Model\Resource\Table\Cart']);
-        $this->im->setParameters('App\Model\QuoteItem', ['table' => 'App\Model\Resource\Table\Cart']);
+        $this->_im->setParameters('App\Model\ProductReview', ['table' => 'App\Model\Resource\Table\ProductReview']);
+        $this->_im->addAlias('ProductReview', 'App\Model\ProductReview');
 
-        $this->_im->addAlias('Quote', 'App\Model\Quote');
-        $this->_im->addAlias('QuoteItem', 'App\Model\QuoteItem');
-        $this->_im->addAlias('QuoteItemCollection', 'App\Model\QuoteItemCollection');
+        $this->_im->setParameters('App\Model\ProductReviewCollection', [
+                'table' => 'App\Model\Resource\Table\ProductReview',
+                'productReviewPrototype' => 'App\Model\ProductReview']
+        );
+        $this->_im->addAlias('ProductReviewCollection', 'App\Model\ProductReviewCollection');
     }
 
     private function _assembleView()
@@ -126,9 +97,32 @@ class DiC
             'params'      => [],
         ]);
         $this->_im->addAlias('View', 'App\Model\ModelView');
+    }
 
+    private function _assembleSession()
+    {
+        $this->_im->setParameters('App\Model\Session', ['table' => 'App\Model\Resource\Table\Customer']);
+        $this->_im->addAlias('Session', 'App\Model\Session');
         $this->_im->setParameters('App\Model\ISessionUser', [
             'session' => $this->_di->get('Session')
         ]);
+
+    }
+
+    private function _assembleQuote()
+    {
+        $this->_im->setParameters('App\Model\QuoteItem', ['table' => 'App\Model\Resource\Table\QuoteItem']);
+        $this->_im->addAlias('QuoteItem', 'App\Model\QuoteItem');
+
+        $this->_im->setParameters('App\Model\QuoteItemCollection', [
+            'table' => 'App\Model\Resource\Table\QuoteItem',
+            'itemPrototype' => 'App\Model\QuoteItem'
+        ]);
+
+        $this->_im->setParameters('App\Model\Quote', [
+            'table' => 'App\Model\Resource\Table\Quote',
+            'items' => $this->_di->get('App\Model\QuoteItemCollection')
+        ]);
+        $this->_im->addAlias('Quote', 'App\Model\Quote');
     }
 }

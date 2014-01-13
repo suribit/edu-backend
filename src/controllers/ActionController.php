@@ -6,13 +6,16 @@
  */
 namespace App\Controller;
 
+
 class ActionController
 {
     protected $_di;
+    protected $_session;
 
     public function __construct(\Zend\Di\Di $di)
     {
         $this->_di = $di;
+        $this->_session = $this->_di->get('Session');
     }
 
     protected function _redirect($page, $params = [])
@@ -22,4 +25,13 @@ class ActionController
 
         header('Location: /?' . \http_build_query($urlParams));
     }
+
+    /**
+     * @return bool
+     */
+    protected function _isPost()
+    {
+        return strtolower($_SERVER['REQUEST_METHOD']) == 'post';
+    }
+
 }

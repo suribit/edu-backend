@@ -2,14 +2,14 @@
 /**
  * @project  edu-backend
  * @author   Seregei Waribrus <wss.world@gmail.com>
- * @date     12/5/13
+ * @date     1/5/14
  */
 namespace App\Model\Resource\Table;
-class Review implements ITable
+class ProductReview implements ITable
 {
     public function getName()
     {
-        return 'review';
+        return 'product_reviews';
     }
 
     public function getPrimaryKey()

@@ -31,11 +31,15 @@ class DBCollection
         $this->_select = $this->_sql->select($this->_table->getName());
     }
 
+    public function check($data)
+    {
+        $stmt = $this->_prepareSql($data);
+        return $stmt->fetch(\PDO::FETCH_ASSOC)[$this->_table->getPrimaryKey()];
+    }
+
     public function fetch()
     {
-
         $results = $this->_executeSelect($this->_select);
-
         return \Zend\Stdlib\ArrayUtils::iteratorToArray($results);
     }
 
@@ -62,7 +66,30 @@ class DBCollection
 
         $statement = $this->_sql->prepareStatementForSqlObject($select);
         $result = $statement->execute($this->_bind);
+
         return $result;
+    }
+
+    private function _prepareBind($fields)
+    {
+        return array_map(function ($field) {
+            return ":{$field}";
+        }, $fields);
+    }
+
+    protected function _prepareSql($data, $columns = '*')
+    {
+        $fields = array_keys($data);
+        $check = array_map(function ($field) {
+            return "{$field} = :{$field}";
+        }, $fields);
+        $whereList = implode(' AND ', $check);
+
+        $sql = "SELECT {$columns} FROM {$this->_table->getName()} WHERE {$whereList}";
+        $stmt = $this->_connection->prepare($sql);
+        $stmt->execute(array_combine($this->_prepareBind($fields), $data));
+
+        return $stmt;
     }
 
     public function limit($limit, $offset = 0)

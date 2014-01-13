@@ -17,5 +17,6 @@ interface IResourceCollection
     public function limit($limit, $offset = 0);
 
     public function count();
+
+    public function check($data);
 }
- 

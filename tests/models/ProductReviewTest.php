@@ -31,10 +31,10 @@ class ProductReviewTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnsTextWhichHasBeenInitialized()
     {
-        $review = new ProductReview(['text' => 'foo']);
+        $review = new ProductReview(['text_review' => 'foo']);
         $this->assertEquals('foo', $review->getText());
 
-        $review = new ProductReview(['text' => 'bar']);
+        $review = new ProductReview(['text_review' => 'bar']);
         $this->assertEquals('bar', $review->getText());
     }
 
@@ -49,14 +49,20 @@ class ProductReviewTest extends \PHPUnit_Framework_TestCase
 
     public function testChecksThatBelongsToProductByLink()
     {
-        $productFoo = new Product(['sku' => 'foo']);
-        $productBar = new Product(['sku' => 'bar']);
+        $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
+        $resource->expects($this->any())
+            ->method('getPrimaryKeyField')
+            ->will($this->returnValue('product_id'));
 
-        $review = new ProductReview(['product' => $productFoo]);
+
+        $productFoo = new Product(['product_id' => 5], $resource);
+        $productBar = new Product(['product_id' => 7], $resource);
+
+        $review = new ProductReview([]);
+        $review->assignToProduct($productFoo);
         $this->assertTrue($review->belongsToProduct($productFoo));
         $this->assertFalse($review->belongsToProduct($productBar));
     }
-
 
     public function testLoadsDataFromResource()
     {
@@ -81,5 +87,35 @@ class ProductReviewTest extends \PHPUnit_Framework_TestCase
 
         $review = new ProductReview(['name' => 'Vasia'], $resource);
         $review->save();
+    }
+
+    public function testGetsIdFromResourceAfterSave()
+    {
+        $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
+        $resource->expects($this->any())
+            ->method('save')
+            ->with($this->equalTo(['name' => 'Vasia']))
+            ->will($this->returnValue(42));
+        $resource->expects($this->any())
+            ->method('getPrimaryKeyField')
+            ->will($this->returnValue('review_id'));
+
+        $review = new ProductReview(['name' => 'Vasia'], $resource);
+        $review->save();
+        $this->assertEquals(42, $review->getId());
+    }
+
+    public function testReturnsIdWhichHasBeenInitialized()
+    {
+        $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
+        $resource->expects($this->any())
+            ->method('getPrimaryKeyField')
+            ->will($this->returnValue('review_id'));
+
+        $review = new Product(['review_id' => 1], $resource);
+        $this->assertEquals(1, $review->getId());
+
+        $review = new Product(['review_id' => 2], $resource);
+        $this->assertEquals(2, $review->getId());
     }
 }

@@ -9,41 +9,14 @@ use \App\Model\Customer;
 
 class CustomerTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testUserVerification()
-    {
-        $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
-        $resource->expects($this->any())
-            ->method('check')
-            ->with($this->equalTo(['name' => 'Vasia', 'password' => md5('123456789')]))
-            ->will($this->returnValue(11));
-
-        $customer = new Customer(['name' => 'Vasia', 'password' => '123456789'], $resource);
-        $customer->check();
-        $this->assertEquals(11, $customer->getId());
-    }
-
-    public function testUserVerificationReturnBool()
-    {
-        $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
-        $resource->expects($this->any())
-            ->method('check')
-            ->with($this->equalTo(['name' => 'Vasia', 'password' => md5('123456789')]))
-            ->will($this->returnValue(11));
-
-        $customer = new Customer(['name' => 'Vasia', 'password' => '123456789'], $resource);
-        $this->assertEquals(true, $customer->check());
-        $this->assertEquals(11, $customer->getId());
-    }
-    
     public function testSavesDataInResource()
     {
         $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
         $resource->expects($this->any())
             ->method('save')
-            ->with($this->equalTo(['name' => 'Vasia', 'password' => md5('1234555')]));
+            ->with($this->equalTo(['name' => 'Vasia']));
 
-        $customer = new Customer(['name' => 'Vasia', 'password' => '1234555'], $resource);
+        $customer = new Customer(['name' => 'Vasia'], $resource);
         $customer->save();
     }
 
@@ -52,20 +25,28 @@ class CustomerTest extends \PHPUnit_Framework_TestCase
         $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
         $resource->expects($this->any())
             ->method('save')
-            ->with($this->equalTo(['name' => 'Vasia', 'password' => md5('1234')]))
+            ->with($this->equalTo(['name' => 'Vasia']))
             ->will($this->returnValue(42));
+        $resource->expects($this->any())
+            ->method('getPrimaryKeyField')
+            ->will($this->returnValue('customer_id'));
 
-        $customer = new Customer(['name' => 'Vasia', 'password' => '1234'], $resource);
+        $customer = new Customer(['name' => 'Vasia'], $resource);
         $customer->save();
         $this->assertEquals(42, $customer->getId());
     }
 
     public function testReturnsIdWhichHasBeenInitialized()
     {
-        $customer = new Customer(['customer_id' => 1]);
+        $resource = $this->getMock('\App\Model\Resource\IResourceEntity');
+        $resource->expects($this->any())
+            ->method('getPrimaryKeyField')
+            ->will($this->returnValue('customer_id'));
+
+        $customer = new Customer(['customer_id' => 1], $resource);
         $this->assertEquals(1, $customer->getId());
 
-        $customer = new Customer(['customer_id' => 2]);
+        $customer = new Customer(['customer_id' => 2], $resource);
         $this->assertEquals(2, $customer->getId());
     }
 }

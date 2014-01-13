@@ -5,7 +5,6 @@ use App\Model\ModelView;
 
 class ModelViewTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testRendersProvidedTemplate()
     {
         $vew = new ModelView(
@@ -26,13 +25,13 @@ class ModelViewTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnsProvidedSession()
     {
-//        $view = new ModelView(null, null, null, null, []);
-//        $session = $this->getMockBuilder('App\Model\Resource\IResourceSession')
-//            ->disableOriginalConstructor()
-//            ->setMethods(['__construct'])
-//            ->getMock();
-//
-//        $view->setSession($session);
-//        $this->assertSame($session, $view->session());
+        $view = new ModelView(null, null, null, null, []);
+        $session = $this->getMockBuilder('App\Model\Session')
+            ->disableOriginalConstructor()
+            ->setMethods(['__construct'])
+            ->getMock();
+
+        $view->setSession($session);
+        $this->assertSame($session, $view->session());
     }
 }

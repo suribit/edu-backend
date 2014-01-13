@@ -9,11 +9,11 @@ namespace App\Model\Resource;
 
 interface IResourceEntity
 {
-    public function find($id = null, $data = null);
+    public function find($id);
 
     public function save($data);
 
-    public function check($data);
+    public function getPrimaryKeyField();
 
     public function delete($id);
 }

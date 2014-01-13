@@ -1,10 +1,10 @@
 <a class="page-back" href="/">&larr;</a>
 <h1 class="page-header">Products My Cart</h1>
-<?php if (empty($quoteItems)): ?>
+<?php if (empty($this->get('items')->getItems())): ?>
     <h1>Cart empty</h1>
 <?php endif; ?>
 <ul class="product-list">
-    <?php foreach ($quoteItems as $_item):
+    <?php foreach ($this->get('items') as $_item):
         $_product = $_item->getProduct();
         ?>
         <li class="product-item">

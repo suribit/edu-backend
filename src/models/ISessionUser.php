@@ -8,5 +8,5 @@ namespace App\Model;
 
 interface ISessionUser
 {
-    public function setSession(IResourceSession $session);
+    public function setSession(Session $session);
 }

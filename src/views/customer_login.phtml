@@ -2,7 +2,9 @@
 <h1 class="page-header">
     Login To The Site
 </h1>
-
+<?php if ($this->get('error_login') == true): ?>
+    <h2>Login failed, try again'</h2>
+<?php endif; ?>
 <form action="?page=customer_login" method="POST">
     <div>
         <label for="name">Name</label>

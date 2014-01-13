@@ -1,4 +1,17 @@
-* use autoloader
-* incapsulate DB connection object
-* incapsulate table name and primary key
-* security
+features:
+* checkout (1 lesson)
+  - address (class)
+  - shipping method (class)
+  - payment method (home)
+* order creation (send email to admin via Zend\Mail) (home)
+
+
+backend:
+* dbentity test: returns ID after save
+* request model in controllers
+* controller tests
+
+misc:
+* advanced git
+* install phpmyadmin
+* install xdebug

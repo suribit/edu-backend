@@ -38,10 +38,13 @@ class ModelView
 
     public function get($param)
     {
-        return $this->_params[$param];
+        if (isset($this->_params[$param]))
+            return $this->_params[$param];
+        else
+            return null;
     }
 
-    public function setSession(IResourceSession $session)
+    public function setSession(Session $session)
     {
         $this->_session = $session;
     }

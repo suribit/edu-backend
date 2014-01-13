@@ -4,61 +4,27 @@
  * @author   Seregei Waribrus <wss.world@gmail.com>
  * @date     12/12/13
  */
-
-
 namespace App\Model;
 
-use App\Model\Resource\IResourceEntity;
-
-
-class QuoteItem extends Entity
+class QuoteItem
+    extends Entity
 {
     private $_product;
 
-    public function addQty($qty)
+    public function getProductId()
     {
-        if ($qty > 0)
-        {
-            $this->_data['qty'] = $qty;
-        }
-        else
-        {
-            $this->_data = null;
-        }
-
+        return $this->_data['product_id'];
     }
 
-    public function updateQty($qty)
+    public function belongsToProduct(Product $product)
     {
-        $this->_data['qty'] += $qty;
-        if ($this->_data['qty'] < 0)
-        {
-            $this->_data = null;
-        }
+        return $this->getProductId() == $product->getId();
     }
 
-    public function delete()
+    public function assignToProduct(Product $product)
     {
-        $this->_resource->delete($this->getId());
-    }
-
-    public function save()
-    {
-        if ($this->_data != null)
-        {
-            $this->_data['cart_id'] = $this->_resource->save($this->_data);
-            return $this->_data['cart_id'];
-        }
-        else
-        {
-            return -1;
-        }
-
-    }
-
-    public function check()
-    {
-        return $this->_resource->check($this->_data);
+        $this->_data['product_id'] = $product->getId();
+        $this->_product = $product;
     }
 
     public function getProduct()
@@ -66,39 +32,34 @@ class QuoteItem extends Entity
         return $this->_product;
     }
 
-    public function getProductId()
-    {
-        return (int) $this->_getData('product_id');
-
-    }
-
-    public function getCustomerId()
-    {
-        return (int) $this->_getData('customer_id');
-    }
-
-    public function getSessionId()
-    {
-        return $this->_getData('session_id');
-    }
-
     public function getQty()
     {
-        return (int) $this->_data['qty'];
+        return $this->_data['qty'];
     }
 
-    public function getId()
+    public function remove()
     {
-        return (int) $this->_getData('cart_id');
+        $this->_resource->delete($this->getId());
     }
 
-    public function load($id)
+    public function updateQty($alterQty)
     {
-        $this->_data = $this->_resource->find($id);
+        if ($this->_data['qty'] + $alterQty > 0)
+        {
+            $this->_data['qty'] += $alterQty;
+            $this->save();
+        }
+        else if ($this->_data['qty'] + $alterQty == 0)
+            $this->remove();
     }
 
-    public function assignProduct(Product $product)
+    public function addQty($qty)
     {
-        $this->_product = $product;
+        $this->_data['qty'] = $this->_getData('qty') + $qty;
     }
-} 
+
+    public function assignToQuote($quote)
+    {
+        $this->_data['quote_id'] = $quote->getId();
+    }
+}

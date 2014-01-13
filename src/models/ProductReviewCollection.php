@@ -10,17 +10,21 @@ class ProductReviewCollection
     implements \IteratorAggregate
 {
     private $_resource;
+    private $_prototype;
 
-    public function __construct(Resource\IResourceCollection $resource)
+    public function __construct(Resource\IResourceCollection $resource, ProductReview $productReviewPrototype)
     {
         $this->_resource = $resource;
+        $this->_prototype = $productReviewPrototype;
     }
 
     public function getReviews()
     {
         return array_map(
             function ($data) {
-                return new ProductReview($data);
+                $productReview = clone $this->_prototype;
+                $productReview->setData($data);
+                return $productReview;
             },
             $this->_resource->fetch()
         );
@@ -33,6 +37,7 @@ class ProductReviewCollection
 
     public function filterByProduct(Product $product)
     {
+        $this->_prototype->assignToProduct($product);
         $this->_resource->filterBy('product_id', $product->getId());
     }
 
