@@ -49,6 +49,12 @@ class DBCollection
         $this->_bind[$column] = $value;
     }
 
+    public function filterLike($column, $value)
+    {
+        $this->_select->where("{$column} LIKE :{$column}");
+        $this->_bind[$column] = $value;
+    }
+
     public function average($column)
     {
         $result = $this->_executeSelect(

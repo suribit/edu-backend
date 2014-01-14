@@ -30,6 +30,17 @@ class DBCollectionTest
         ], $collection->fetch());
     }
 
+    public function testFetchesFilterLikeData()
+    {
+        $collection = $this->_getCollection();
+        $collection->filterLike('data', 'fo');
+        $this->assertEquals([
+            ['id' => 1, 'data' => 'foo'],
+            ['id' => 3, 'data' => 'foolooo']
+        ], $collection->fetch());
+        die;
+    }
+
     /**
      * @dataProvider getColumns
      */
