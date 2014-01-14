@@ -1,0 +1,29 @@
+<?php $customer = $this->get('customer'); ?>
+
+<a class="page-back" href="/">&larr;</a>
+<h1 class="page-header">
+    <?php echo $customer->getName(); ?>
+</h1>
+<div class="view-customer">
+    <a href="/?page=customerAdmin_remove&customer_id=<?php echo $customer->getId(); ?>">Удалить</a>
+    <form method="post" action="/?page=customerAdmin_edit&customer_id=<?php echo $customer->getId(); ?>">
+        <div>
+            <label>Name</label>
+            <input type="text" name="edit[name]" value="<?php echo $customer->getName(); ?>"/>
+        </div>
+
+        <div>
+            <label>Email</label>
+            <input type="text" name="edit[email]" value="<?php echo $customer->getEmail(); ?>"/>
+        </div>
+
+        <div>
+            <label>New password</label>
+            <input type="text" name="edit[password]" value=""/>
+        </div>
+
+        <div>
+            <input type="submit"/>
+        </div>
+    </form>
+</div>

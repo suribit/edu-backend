@@ -8,6 +8,8 @@
 
 namespace App\Controller;
 
+use Zend\Mail;
+
 
 class CustomerAdminController
     extends ActionController
@@ -40,7 +42,20 @@ class CustomerAdminController
 
         if (isset($_POST['edit']))
         {
+            $customer = $this->_di->get('Customer');
+            $customer->load($_GET['customer_id']);
 
+            $customer->updateDate($_POST['edit']);
+            if ($customer->getOpenPassword() != null)
+            {
+                $mailTo = $customer->getEmail();
+                $newPassword = $customer->getOpenPassword();
+                echo $mailTo;
+                echo $newPassword;
+                die;
+            }
+
+            $this->_redirect('customerAdmin_list');
         }
         else
         {
@@ -51,7 +66,7 @@ class CustomerAdminController
 
                 return $this->_di->get('View', [
                     'layout' => 'admin',
-                    'template' => 'customerAdmin_list',
+                    'template' => 'customerAdmin_edit',
                     'params'   => ['customer' => $customer]
                 ]);
             }

@@ -8,6 +8,8 @@ namespace App\Model;
 
 class Customer extends Entity
 {
+    private $_openPassword = null;
+
     public function __construct(array $data = [], Resource\IResourceEntity $resource = null)
     {
         if (isset($data['password']))
@@ -51,6 +53,23 @@ class Customer extends Entity
     public function remove()
     {
         $this->_resource->delete($this->getId());
+    }
+
+    public function getOpenPassword()
+    {
+        return $this->_openPassword;
+    }
+
+    public function updateDate($data)
+    {
+        $this->_data['name'] = $data['name'];
+        $this->_data['email'] = $data['email'];
+        if (isset($data['password']) && $data['password'] != '')
+        {
+            $this->_data['password'] = md5($data['password']);
+            $this->_openPassword = $data['password'];
+        }
+        $this->save();
     }
 
 }

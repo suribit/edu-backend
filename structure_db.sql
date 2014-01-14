@@ -67,7 +67,7 @@ CREATE TABLE admins (
    PRIMARY KEY (admin_id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8  AUTO_INCREMENT=1;
 
-INSERT INTO admins(name, password, email) VALUES("admin", "3a523780ee1bbb78bb52bc657449d257php", "wss.world@gmail.com");
+INSERT INTO admins(name, password, email) VALUES("admin", "3a523780ee1bbb78bb52bc657449d257", "wss.world@gmail.com");
 
 
 
