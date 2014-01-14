@@ -48,4 +48,9 @@ class Customer extends Entity
         return $this->_getData('quote_id');
     }
 
+    public function remove()
+    {
+        $this->_resource->delete($this->getId());
+    }
+
 }

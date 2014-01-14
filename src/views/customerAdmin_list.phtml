@@ -15,9 +15,9 @@
 
         <?php foreach ($this->get('customers') as $_customer): ?>
         <tr>
-            <td><a href="customerAdmin_edit&customer_id=<?php echo $_customer->getId(); ?>"><?php echo $_customer->getName(); ?></a></td>
-            <td><a href="customerAdmin_edit&customer_id=<?php echo $_customer->getId(); ?>"><?php echo $_customer->getEmail(); ?></a></td>
-            <td><a href="customerAdmin_remove&customer_id=<?php echo $_customer->getId(); ?>">Удалить</a></td>
+            <td><a href="/?page=customerAdmin_edit&customer_id=<?php echo $_customer->getId(); ?>"><?php echo $_customer->getName(); ?></a></td>
+            <td><a href="/?page=customerAdmin_edit&customer_id=<?php echo $_customer->getId(); ?>"><?php echo $_customer->getEmail(); ?></a></td>
+            <td><a href="/?page=customerAdmin_remove&customer_id=<?php echo $_customer->getId(); ?>">Удалить</a></td>
         </tr>
         <?php endforeach; ?>
         </tbody>

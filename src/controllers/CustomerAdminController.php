@@ -34,6 +34,48 @@ class CustomerAdminController
 
     }
 
+    public function editAction()
+    {
+        $this->_isLoggedIn();
+
+        if (isset($_POST['edit']))
+        {
+
+        }
+        else
+        {
+            if (isset($_GET['customer_id']))
+            {
+                $customer = $this->_di->get('Customer');
+                $customer->load($_GET['customer_id']);
+
+                return $this->_di->get('View', [
+                    'layout' => 'admin',
+                    'template' => 'customerAdmin_list',
+                    'params'   => ['customer' => $customer]
+                ]);
+            }
+            else
+            {
+                $this->_redirect('customerAdmin_list');
+            }
+        }
+    }
+
+    public function removeAction()
+    {
+        $this->_isLoggedIn();
+
+        if (isset($_GET['customer_id']))
+        {
+            $customer = $this->_di->get('Customer');
+            $customer->load($_GET['customer_id']);
+            $customer->remove($_GET['customer_id']);
+        }
+
+        $this->_redirect('customerAdmin_list');
+    }
+
     private function _isLoggedIn()
     {
         if (!$this->_session->adminIsLoggedIn())
