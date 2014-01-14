@@ -1,4 +1,5 @@
 <h1 class="page-header">Our Product List</h1>
+<a href="/?page=customerAdmin_add">Добавить нового пользователя</a>
 <ul class="product-list">
     <?php for ($page = 1; $page <= $this->get('pages')->pageCount; $page++): ?>
         <a href="/?page=customerAdmin_list&p=<?php echo $page; ?>"><?php echo $page; ?></a>

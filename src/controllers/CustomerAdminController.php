@@ -77,6 +77,27 @@ class CustomerAdminController
         }
     }
 
+    public function addAction()
+    {
+        $this->_isLoggedIn();
+
+        if (isset($_POST['add']))
+        {
+            $customer = $this->_di->get('Customer', ['data' => $_POST['add']]);
+            $customer->save();
+
+            $this->_redirect('customerAdmin_list');
+        }
+        else
+        {
+            return $this->_di->get('View', [
+                'layout' => 'admin',
+                'template' => 'customerAdmin_add',
+                'params'   => []
+            ]);
+        }
+    }
+
     public function removeAction()
     {
         $this->_isLoggedIn();
