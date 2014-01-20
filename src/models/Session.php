@@ -131,4 +131,9 @@ class Session
     {
         session_unset();
     }
+
+    public function removed($key)
+    {
+        unset($_SESSION[$key]);
+    }
 }

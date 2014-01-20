@@ -51,6 +51,7 @@ class ProductController
             ->setCurrentPageNumber(isset($_GET['p']) ? $_GET['p'] : 1);
         $pages = $paginator->getPages();
 
+
         return $this->_di->get('View', [
             'template' => 'product_view',
             'params'   => ['product' => $product, 'reviews' => $reviews, 'pages' => $pages]

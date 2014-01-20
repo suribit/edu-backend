@@ -39,7 +39,7 @@ class DBCollection
 
     public function fetch()
     {
-        $results = $this->_executeSelect($this->_select);
+        $results = $this->_executeSelect($this->_select, ['*']);
         return \Zend\Stdlib\ArrayUtils::iteratorToArray($results);
     }
 
@@ -64,8 +64,9 @@ class DBCollection
     {
         $result = $this->_executeSelect(
             $this->_select,
-            ['avg' => new \Zend\Db\Sql\Predicate\Expression("AVG({$column})")]
+            ['avg' => new \Zend\Db\Sql\Predicate\Expression("AVG({$column})"), '*']
         );
+
         return $result->current()['avg'];
     }
 

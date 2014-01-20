@@ -1,10 +1,11 @@
-<?php $product = $this->get('product'); ?>
+<?php
+    $product = $this->get('product');
+?>
 
 <a class="page-back" href="/">&larr;</a>
 <h1 class="page-header">
     <?php echo $product->getName(); ?>
 </h1>
-
 <div class="product-view">
     <img class="product-view_image" src="<?php echo $product->getImage(); ?>"/>
 
@@ -23,12 +24,15 @@
         <input type="hidden" name="product_id" value="<?php echo $product->getId(); ?>" />
         <input type="submit" value="Buy!"/>
     </form>
+    <p>Рейтинг товара: <?php echo (float)$this->get('reviews')->getAverageRating() ?></p>
 </div>
+
 <div class="reviews">
     <h2>Customer Reviews</h2>
     <?php for ($page = 1; $page <= $this->get('pages')->pageCount; $page++): ?>
         <a href="/?page=product_view&id=<?php echo $this->get('product')->getId(); ?>&p=<?php echo $page; ?>"><?php echo $page; ?></a>
     <?php endfor; ?>
+
     <ul>
         <?php foreach ($this->get('reviews') as $_review): ?>
             <li>
