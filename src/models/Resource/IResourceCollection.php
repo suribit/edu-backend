@@ -12,7 +12,7 @@ interface IResourceCollection
 
     public function filterBy($column, $value);
 
-    public function filterLike($column, $value);
+    public function likeBy($column, $value);
 
     public function average($column);
 

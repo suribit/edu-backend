@@ -30,15 +30,14 @@ class DBCollectionTest
         ], $collection->fetch());
     }
 
-    public function testFetchesFilterLikeData()
+    public function testFetchesLikedData()
     {
         $collection = $this->_getCollection();
-        $collection->filterLike('data', 'fo');
+        $collection->likeBy('data', 'fo%');
         $this->assertEquals([
             ['id' => 1, 'data' => 'foo'],
             ['id' => 3, 'data' => 'foolooo']
         ], $collection->fetch());
-        die;
     }
 
     /**

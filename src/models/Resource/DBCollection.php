@@ -49,7 +49,7 @@ class DBCollection
         $this->_bind[$column] = $value;
     }
 
-    public function filterLike($column, $value)
+    public function likeBy($column, $value)
     {
         $this->_select->where("{$column} LIKE :{$column}");
         $this->_bind[$column] = $value;
