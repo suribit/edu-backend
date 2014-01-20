@@ -9,6 +9,8 @@
 namespace App\Controller;
 
 use Zend\Mail;
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Sendmail as SendmailTransport;
 
 
 class CustomerAdminController
@@ -55,6 +57,19 @@ class CustomerAdminController
             'params'   => ['customers' => $customers, 'pages' => $pages]
         ]);
 
+    }
+
+    public function mailAction()
+    {
+        $message = new Message();
+        $message->addTo('matthew@zend.com')
+            ->addFrom('ralph.schindler@zend.com')
+            ->setSubject('Greetings and Salutations!')
+            ->setBody("Sorry, I'm going to be late today!");
+
+        $transport = new SendmailTransport();
+        $transport->send($message);
+        echo 'hi';
     }
 
     public function editAction()

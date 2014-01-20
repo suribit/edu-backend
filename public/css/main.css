@@ -23,28 +23,28 @@
 }
 
 .product-item {
-    border-bottom: 1px dotted #ccc;
+    border-bottom: 2px dotted #ccc;
 }
 
 .product-item_title {
-    font-size: 1em;
-    margin-bottom: 0px;
+    font-size: 1.5em;
+    margin-bottom: 10px;
 }
 
 .product-item_sku {
-    font-size: 0.5em;
+    font-size: 1em;
     color: #ccc;
 }
 
 .product-item_price {
-    font-size: 0.8em;
-    margin-right: 5px;
+    font-size: 1.2em;
+    margin-right: 40px;
 }
 
 .product-item_image {
-    width: 50px;
+    width: 100px;
     float: left;
-    margin-right: 20px;
+    margin-right: 30px;
 }
 
 .old-price {
@@ -59,7 +59,7 @@
 }
 
 .product-view_sku {
-    font-size: 0.8em;
+    font-size: 1em;
     color: #ccc;
 }
 
@@ -70,7 +70,8 @@
 
 .login {
     float: right;
-    font-size: 0.7em;
+    font-size: 1em;
+    margin-right: 40px;
 }
 
 .product-view {
@@ -87,4 +88,8 @@
 .new-review {
     border-top: 1px dotted #ccc;
     padding-top: 10px;
+}
+
+.field {
+    text-align: right;
 }

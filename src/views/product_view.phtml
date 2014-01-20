@@ -9,7 +9,7 @@
 <div class="product-view">
     <img class="product-view_image" src="<?php echo $product->getImage(); ?>"/>
 
-    <div class="product-view_sku"><?php echo $product->getSku(); ?></div>
+    <div class="product-view_sku">№: <?php echo $product->getSku(); ?></div>
     <div>
         <span
             class="product-item_price <?php if ($product->isSpecialPriceApplied()): ?>old-price<?php endif; ?>">
@@ -64,13 +64,13 @@
             </select>
         </div>
 
-        <div>
+        <div class="field">
             <label>Text</label>
             <textarea name="text_review"></textarea>
         </div>
 
         <div>
-            <input type="submit"/>
+            <input type="submit" value="Написать"/>
         </div>
     </form>
 </div>
