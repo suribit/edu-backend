@@ -49,6 +49,11 @@ class DBCollection
         $this->_bind[$column] = $value;
     }
 
+    public function orderBy($column, $type = 'ASC')
+    {
+        $this->_select->order("{$column} {$type}");
+    }
+
     public function likeBy($column, $value)
     {
         $this->_select->where("{$column} LIKE :{$column}");

@@ -40,6 +40,33 @@ class DBCollectionTest
         ], $collection->fetch());
     }
 
+    public function testFetchesSortedData()
+    {
+        $collection = $this->_getCollection();
+        $collection->orderBy('id', 'DESC');
+        $this->assertEquals([
+            ['id' => 3, 'data' => 'foolooo'],
+            ['id' => 2, 'data' => 'bar'],
+            ['id' => 1, 'data' => 'foo']
+        ], $collection->fetch());
+
+        $collectionASC = $this->_getCollection();
+        $collectionASC->orderBy('id', 'ASC');
+        $this->assertEquals([
+            ['id' => 1, 'data' => 'foo'],
+            ['id' => 2, 'data' => 'bar'],
+            ['id' => 3, 'data' => 'foolooo']
+        ], $collectionASC->fetch());
+
+        $collectionDATA = $this->_getCollection();
+        $collectionDATA->orderBy('data', 'DESC');
+        $this->assertEquals([
+            ['id' => 3, 'data' => 'foolooo'],
+            ['id' => 1, 'data' => 'foo'],
+            ['id' => 2, 'data' => 'bar']
+        ], $collectionDATA->fetch());
+    }
+
     /**
      * @dataProvider getColumns
      */

@@ -14,6 +14,8 @@ interface IResourceCollection
 
     public function likeBy($column, $value);
 
+    public function orderBy($column, $type = 'ASC');
+
     public function average($column);
 
     public function limit($limit, $offset = 0);
