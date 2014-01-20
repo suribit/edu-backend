@@ -7,8 +7,37 @@
     <table border="1">
     <thead>
     <tr>
-        <th>Имя</th>
-        <th>E-mail</th>
+        <th>
+            <form action="/?page=customerAdmin_list" method="post">
+                <input type="hidden" name="filter_by" value="name" />
+                <input type="text" name="filter_value" value="<?php if ($this->get('customers')->getLikeBy()['name'] == 'name') echo $this->get('customers')->getLikeBy()['value']?>"/>
+                <input type="submit" value="Фильтр"/>
+            </form>
+        </th>
+        <th>
+            <form action="/?page=customerAdmin_list" method="post">
+                <input type="hidden" name="filter_by" value="email" />
+                <input type="text" name="filter_value" value="<?php if ($this->get('customers')->getLikeBy()['name'] == 'email') echo $this->get('customers')->getLikeBy()['value']?>"/>
+                <input type="submit" value="Фильтр"/>
+            </form>
+        </th>
+        <th>
+
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <form action="/?page=customerAdmin_list" method="post">
+                <input type="hidden" name="order_by" value="name" />
+                <input type="submit" value="Имя"/>
+            </form>
+        </th>
+        <th>
+            <form action="/?page=customerAdmin_list" method="post">
+                <input type="hidden" name="order_by" value="email" />
+                <input type="submit" value="E-mail"/>
+            </form>
+        </th>
         <th>Действие</th>
     </tr>
     </thead>

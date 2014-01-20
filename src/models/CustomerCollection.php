@@ -13,6 +13,9 @@ class CustomerCollection
 {
     private $_resource;
     private $_prototype;
+    private $_orderBy = '';
+    private $_filterBy = '';
+    private $_filterByValue = '';
 
     public function __construct(Resource\IResourceCollection $resource, Customer $customerPrototype)
     {
@@ -42,5 +45,29 @@ class CustomerCollection
         $id = $this->_resource->check(['name' => $customer->getName(), 'password' => $customer->getPassword()]);
         $customer->load($id);
         return $id;
+    }
+
+    public function orderBy($column)
+    {
+        $this->_orderBy = $column;
+        $this->_resource->orderBy($column, 'DESC');
+    }
+
+    public function getNameOrder()
+    {
+        return $this->_orderBy;
+    }
+
+    public function likeBy($column, $value)
+    {
+        $this->_filterBy = $column;
+        $this->_filterByValue = $value;
+        if ($this->_filterByValue != '')
+            $this->_resource->likeBy($column, $value.'%');
+    }
+
+    public function getLikeBy()
+    {
+        return ['name' => $this->_filterBy, 'value' => $this->_filterByValue];
     }
 }

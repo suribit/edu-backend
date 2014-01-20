@@ -16,17 +16,38 @@ class CustomerAdminController
 {
     public function listAction()
     {
+
         $this->_isLoggedIn();
 
         $resource = $this->_di->get('ResourceCollection', ['table' => new \App\Model\Resource\Table\Customer()]);
+
+        $customer = $this->_di->get('Customer');
+        $customers = $this->_di->get('CustomerCollection', ['resource' => $resource, 'customerPrototype' => $customer]);
+        if (isset($_POST['order_by']) && $this->_session->getData('order_by') != $_POST['order_by'])
+            $this->_session->setData('order_by', $_POST['order_by']);
+        else if (isset($_POST['order_by']) && $this->_session->getData('order_by') == $_POST['order_by'])
+            $this->_session->removed('order_by');
+
+        if (isset($_POST['filter_by']) && isset($_POST['filter_value']))
+        {
+            $this->_session->setData('filter_by', $_POST['filter_by']);
+            $this->_session->setData('filter_value', $_POST['filter_value']);
+        }
+
+
+        if ($this->_session->getData('order_by') != null)
+            $customers->orderBy($this->_session->getData('order_by'));
+
+        if ($this->_session->getData('filter_by') != null && $this->_session->getData('filter_value') != null)
+            $customers->likeBy($this->_session->getData('filter_by'), $this->_session->getData('filter_value'));
+
         $paginator = $this->_di->get('Paginator', ['collection' => $resource]);
         $paginator
             ->setItemCountPerPage(3)
             ->setCurrentPageNumber(isset($_GET['p']) ? $_GET['p'] : 1);
         $pages = $paginator->getPages();
 
-        $customer = $this->_di->get('Customer');
-        $customers = $this->_di->get('CustomerCollection', ['resource' => $resource, 'customerPrototype' => $customer]);
+
 
         return $this->_di->get('View', [
             'layout' => 'admin',
